@@ -14,17 +14,15 @@ var serverUsers = {};
 
 // ---------------- BOT-SETUP ---------------------
 
-client.Dispatcher.on(Events.GATEWAY_READY, e => {
-	console.log("user:" + e);
-	
-	console.log('Connected as: ' + client.User.username);
+client.Dispatcher.on(Events.GATEWAY_READY, e => {	
+	console.log('[LOG] Connected as: ' + client.User.username);
 
-	console.log("Adding all users on server");
+	console.log("[LOG] Adding all users on server");
 	client.Users.forEach(function (e) {
 		serverUsers[e.username] = new UserClass(e.username);
 		
 	});
-	console.log("Users added: " + Object.keys(serverUsers).length);
+	console.log("[LOG] Users added: " + Object.keys(serverUsers).length);
 });
 
 // ---------------- MESSAGE-UPDATES ---------------------
@@ -36,16 +34,31 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 		respondToUserCommand(e, fuckyou);
 	}
 	if (content == ".stupid bot") {
-		respondToUserCommand(e, "No u!");
+		respondToUserCommand(e, "No. I'm a shitty bot. Get it right, you little bitch.");
 	}
 	if (content == ".shit") {
 		respondToUserCommand(e, ":poop:");
 	}
 	if (content == ".help") {
-		respondToUserCommand(e, "GTFO");
+		respondToUserCommand(e, "Computer says no.");
 	}
 	if (content == ".commands") {
 		respondToUserCommand(e, commands);
+	}
+	if(content.substr(0, content.indexOf(' ')) == ".rust") {
+		var link = "http://rust.wikia.com/wiki/";
+		var search_item = content.substr(content.indexOf(' ') + 1);
+		link += search_item;
+		respondToUserCommand(e, link);
+	}
+	if(content == ".coffee") {
+		respondToUserCommand(e, "Grinding coffee-beans...");
+		setTimeout(function() { respondToUserCommand(e, "Placing ground coffee in filter...") }, 3000);
+		setTimeout(function() { respondToUserCommand(e, "Brewing coffee...") }, 5000);
+		setTimeout(function() { respondToUserCommand(e, "Enjoy your shitty coffee. :poop: :coffee:") }, 10000);
+	}
+	if(content == ".codeblogs") {
+		
 	}
 });
 
@@ -58,10 +71,10 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 
 	if (status != prevStatus) {
 		if (status == "online" && prevStatus == "offline") {
-			console.log("[DEBUG] User logged in: " + serverUsers[e.user.username].name);
+			console.log("[LOG] User logged in: " + serverUsers[e.user.username].name);
 		}
 		else if (status == "offline" && prevStatus == "online") {
-			console.log("[DEBUG] User disconnected: " + serverUsers[e.user.username].name);
+			console.log("[LOG] User disconnected: " + serverUsers[e.user.username].name);
 		}
 	}
 
@@ -73,6 +86,7 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 	if (game != prevGame) {
 		var message;
 		var user = serverUsers[e.user.username];
+
 		if (checkUserRole(e.member.roles, "Master")) {
 			if (game != null) {
 				message = user.startGame(game);
@@ -84,7 +98,7 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 				else {
 					message = user.name + " stopped playing " + prevGame;
 				}
-				console.log(message);
+				console.log("[LOG] " + message);
 			}
 			channel.sendMessage(message)
 		};
@@ -94,7 +108,7 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 
 // ---------------- FUNCTIONS ---------------------
 function respondToUserCommand(event, msg) {
-	console.log("Sent message: " + msg + " to : " + event.message.channel.name)
+	console.log("[LOG] Sent message: " + msg + " to: " + event.message.channel.name);
 	event.message.channel.sendMessage(msg);
 }
 
@@ -114,7 +128,6 @@ function getChannel(cname) {
 function getUser(uname) {
 	return client.Users.filter(u => (u.username == uname))[0];
 }
-
 // ------------------------------------------------
 
 // ---------------- CLASSES -----------------------
@@ -187,4 +200,4 @@ const fuckyou = ". \n" +
 	"..........................( \n" +
 	"...........................\\ \n";
 
-const commands = ".\n.fu\n.stupid bot\n.shit\n";
+const commands = ".\n.fu\n.stupid bot\n.shit\n.rust <item>\n.coffee\n";
