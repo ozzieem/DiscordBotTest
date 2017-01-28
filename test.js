@@ -15,16 +15,19 @@ var serverUsers = {};
 // ---------------- BOT-SETUP ---------------------
 
 client.Dispatcher.on(Events.GATEWAY_READY, e => {
+	console.log("user:" + e);
+	
 	console.log('Connected as: ' + client.User.username);
 
 	console.log("Adding all users on server");
 	client.Users.forEach(function (e) {
 		serverUsers[e.username] = new UserClass(e.username);
+		
 	});
 	console.log("Users added: " + Object.keys(serverUsers).length);
 });
 
-// ---------------- MESSAGE-UPDATES  ---------------------
+// ---------------- MESSAGE-UPDATES ---------------------
 
 client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 	var content = e.message.content;
@@ -70,28 +73,38 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 	if (game != prevGame) {
 		var message;
 		var user = serverUsers[e.user.username];
-		if (game != null) {
-			user.startGame();
-			message = user.name + " started playing " + game;
-			console.log(message);
-		} else if (prevGame != null) {
-			if (user.gameTime.start != 0) {
-				user.endGame();
-				message = user.name + " stopped playing " + prevGame + ". Duration: " + user.gameTime.total + " s";
+		if (checkUserRole(e.member.roles, "Master")) {
+			if (game != null) {
+				message = user.startGame(game);
+				console.log(message);
+			} else if (prevGame != null) {
+				if (user.gameTime.start != 0) {
+					message = user.endGame(prevGame);
+				}
+				else {
+					message = user.name + " stopped playing " + prevGame;
+				}
+				console.log(message);
 			}
-			else {
-				message = user.name + " stopped playing " + prevGame;
-			}
-			console.log(message);
-		}
-		channel.sendMessage(message);
+			channel.sendMessage(message)
+		};
 	}
 });
 
+
 // ---------------- FUNCTIONS ---------------------
 function respondToUserCommand(event, msg) {
-	console.log("Sent message: " + msg + " to channel: " + event.message.channel.name)
+	console.log("Sent message: " + msg + " to : " + event.message.channel.name)
 	event.message.channel.sendMessage(msg);
+}
+
+function checkUserRole(roles, rname) {
+	var role = roles.filter(r => (r.name == rname))[0];
+	if(role != undefined) {
+		return true;
+	}
+	return false;
+
 }
 
 function getChannel(cname) {
@@ -101,6 +114,7 @@ function getChannel(cname) {
 function getUser(uname) {
 	return client.Users.filter(u => (u.username == uname))[0];
 }
+
 // ------------------------------------------------
 
 // ---------------- CLASSES -----------------------
@@ -110,12 +124,13 @@ class UserClass {
 		this.gameTime = new Time();
 	};
 
-	startGame() {
+	startGame(game) {
 		this.gameTime.startTimer();
+		return this.name + " started playing " + game;
 	}
 
-	endGame() {
-		this.gameTime.calculateTotalTime();
+	endGame(prevGame) {
+		return this.name + " stopped playing " + prevGame + ". " + this.gameTime.calculateTotalTime();
 	}
 }
 
@@ -123,7 +138,7 @@ class Time {
 	constructor() {
 		this.start = 0;
 		this.end = 0;
-		this.total = 0;
+		this.duration = 0;
 	};
 
 	startTimer() {
@@ -136,8 +151,25 @@ class Time {
 
 	calculateTotalTime() {
 		this.endTimer();
-		this.total = (this.end.getTime() - this.start.getTime()) / 1000;
-		console.log('[DEBUG] Duration: ' + this.total + ' sec');
+		var time = Math.floor((this.end.getTime() - this.start.getTime()) / 1000);
+
+		var hours = Math.floor(time / 3600);
+		var minutes = Math.floor((time % 3600) / 60);
+		var seconds = time % 60;
+
+		var time_str = "Duration: ";
+
+		if (hours > 0) {
+			time_str += hours + "h ";
+		}
+		if (minutes > 0) {
+			time_str += minutes + "m ";
+		}
+		time_str += seconds + "s";
+
+		// console.log('[DEBUG] ' + time_str);
+
+		return time_str;
 	};
 }
 // ------------------------------------------------
@@ -155,4 +187,4 @@ const fuckyou = ". \n" +
 	"..........................( \n" +
 	"...........................\\ \n";
 
-const commands = "\n!fu\n!stupid bot\n!shit\n";
+const commands = ".\n.fu\n.stupid bot\n.shit\n";
