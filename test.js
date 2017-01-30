@@ -17,12 +17,12 @@ client.Dispatcher.on(Events.GATEWAY_READY, e => {
 
 	ServerUsers.create();
 
-	// Receiveing online/offline users on server
+	// Receiving online/offline users on server
 	const guild = client.Guilds.find(g => g.name == "T_CONNECT");
 
 	addUsersOnServer(guild);
 
-	ServerUsers.ToString();
+	// ServerUsers.ToString();
 });
 
 // ---------------- MESSAGE-UPDATES ---------------------
@@ -30,59 +30,68 @@ client.Dispatcher.on(Events.GATEWAY_READY, e => {
 client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 	var content = e.message.content;
 
-	TimeLog.debug("User " + e.username + " sent message " + content);
+	TimeLog.debug("User " + e.message.author.username + " sent message " + content + " in channel " + e.message.channel.name);
 
-	if (content == '.fu') {
-		respondToUserCommand(e, fuckyou);
-	}
-	if (content == ".stupid bot") {
-		respondToUserCommand(e, "No. I'm a shitty bot. Get it right, you little bitch.");
-	}
-	if (content == ".shit") {
-		respondToUserCommand(e, ":poop:");
-	}
-	if (content == ".help") {
-		respondToUserCommand(e, "Computer says no.");
-	}
-	if (content == ".commands") {
-		respondToUserCommand(e, commands);
-	}
-	// TODO: Abstract this substr-shit into something else
-	if (content.substr(0, content.indexOf(' ')) == ".rust") {
-		var link = "http://rust.wikia.com/wiki/";
-		var search_item = content.substr(content.indexOf(' ') + 1);
-		link += search_item;
-		respondToUserCommand(e, link);
-	}
-	// TODO: Same shit here with substr
-	if (content.substr(0, content.indexOf(' ')) == ".status") {
-		var usrname = content.substr(content.indexOf(' ') + 1);
-		try {
-			respondToUserCommand(e, ServerUsers.get(usrname).getStatus());
-		} catch (err) {
-			respondToUserCommand(e, err.message + "Username " + usrname + " does not exist, you shitter");
-		}
-	}
-	if (content.substr(0, content.indexOf(' ')) == ".registered") {
-		var usrname = content.substr(content.indexOf(' ') + 1);
-		try {
-			respondToUserCommand(e, ServerUsers.get(usrname).getRegistered());
-		} catch (err) {
-			respondToUserCommand(e, "Username " + usrname + " does not exist, you shitter");
-		}
+	// Standard commands
+	switch (content) {
+		case ".fu": {
+			respondToUserCommand(e, fuckyou);
+		} break;
+		case ".stupid bot": {
+			respondToUserCommand(e, "Actually, I'm a shitty bot. Get it right, you little bitch.");
+		} break;
+		case ".shit": {
+			respondToUserCommand(e, ":poop:");
+		} break;
+		case ".help": {
+			respondToUserCommand(e, "Computer says no.");
+		} break;
+		case ".commands": {
+			respondToUserCommand(e, commands);
+		} break;
+		case ".coffee": {
+			respondToUserCommand(e, "Grinding coffee-beans...");
+			setTimeout(function () { respondToUserCommand(e, "Placing ground coffee in filter...") }, 3000);
+			setTimeout(function () { respondToUserCommand(e, "Brewing coffee...") }, 5000);
+			setTimeout(function () { respondToUserCommand(e, "Enjoy your shitty coffee. :poop: :coffee:") }, 10000);
+		} break;
 
-	}
-	if (content == ".coffee") {
-		respondToUserCommand(e, "Grinding coffee-beans...");
-		setTimeout(function () { respondToUserCommand(e, "Placing ground coffee in filter...") }, 3000);
-		setTimeout(function () { respondToUserCommand(e, "Brewing coffee...") }, 5000);
-		setTimeout(function () { respondToUserCommand(e, "Enjoy your shitty coffee. :poop: :coffee:") }, 10000);
-	}
-	if (content == ".codeblogs") {
+		default: {
 
+		} break;
 	}
 
+	// Double word commands
+	switch (getFirstWord(content, ' ')) {
+		case ".rust": {
+			var link = "http://rust.wikia.com/wiki/";
+			var search_item = getRestStr(content, ' ');
+			link += search_item;
+			respondToUserCommand(e, link);
+		} break;
+		case ".status": {
+			var usrname = getRestStr(content, ' ');
+			try {
+				respondToUserCommand(e, ServerUsers.get(usrname).getStatus());
+			} catch (err) {
+				respondToUserCommand(e, err.message + "Username '" + usrname + "' does not exist, you shitter");
+			}
+		} break;
+		case ".reg": {
+			var usrname = getRestStr(content, ' ');
+			try {
+				respondToUserCommand(e, ServerUsers.get(usrname).getRegistered());
+			} catch (err) {
+				respondToUserCommand(e, "Username '" + usrname + "' does not exist, you shitter");
+			}
+		} break;
+
+		default: {
+
+		} break;
+	}
 });
+
 
 // ---------------- USER-UPDATES  ---------------------
 
@@ -131,8 +140,17 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 
 // ---------------- FUNCTIONS ---------------------
 {
-	function addUsersOnServer(guild) {
+	function getRestStr(str, sep) {
+		var extWord = str.substr(str.indexOf(sep) + 1);
+		return extWord;
+	}
 
+	function getFirstWord(str, sep) {
+		var firstWord = str.substr(0, str.indexOf(sep));
+		return firstWord;
+	}
+
+	function addUsersOnServer(guild) {
 		var onlineUsers = client.Users.onlineMembersForGuild(guild);
 		var offlineUsers = client.Users.offlineMembersForGuild(guild);
 
@@ -187,65 +205,6 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 // ------------------------------------------------
 
 // ---------------- CLASSES -----------------------
-{ // command classes
-	const commands = ".\n.fu\n.stupid bot\n.shit\n.rust <item>\n.coffee\n.status <username>\n.registered <username>";
-	{	// Command classes
-		/**
-		 * Command container
-		 */
-		class CommandList {
-			constructor() {
-				this.cmds = {};
-			}
-
-			add(cmd_obj) {
-				this.cmds[cmd_obj.cmd] = cmd_obj;
-			}
-
-			addAll() {
-			}
-		}
-
-		/**
-		 * A command class to store a specific command
-		 */
-		class Command {
-			// static fu_cmd = '.fu';
-			// static stupidbot_cmd = '.stupid bot';
-			// static shit_cmd = '.shit';
-			// static rust_cmd = '.rust';
-			// static coffee_cmd = '.coffee';
-
-			fu() {
-				return fuckyou;
-			}
-
-			stupidbot() {
-				return "No. I'm a shitty bot. Get it right, you little bitch.";
-			}
-
-			shit() {
-				return ":poop:";
-			}
-
-			rust(search_word) {
-				var link = "http://rust.wikia.com/wiki/";
-				var search_item = search_word.substr(search_word.indexOf(' ') + 1);
-				link += search_item;
-				return link;
-			}
-
-			help() {
-				return "Computer says No.";
-			}
-
-			commands() {
-				// TODO: simple way of listing commands
-				// return commands;
-			}
-		}
-	}
-}
 
 /**
  * Static class-container for users on server
@@ -298,11 +257,8 @@ class UserClass {
 
 	endGame(prevGame) {
 		this.gameTime.endTimer();
-		return this.name + " stopped playing " + prevGame + ".Duration: " +
-			Time.calculateTotalTime(
-				this.gameTime.end,
-				this.gameTime.start
-			);
+		return this.name + " stopped playing " + prevGame + ". (Duration: " +
+			Time.calculateTotalTime(this.gameTime.end, this.gameTime.start) + ")";
 	}
 
 	setOnline() {
@@ -318,13 +274,13 @@ class UserClass {
 	}
 
 	getStatus() {
-		var ret = "Status for " + this.name + ":\n";
+		var ret = "Status " + this.name + ": " + this.status + "\n";
 		if (this.status == "online") {
 			ret += "Logged in at: " + Time.getDateString(this.loggedOnTime) + "\n";
 			ret += "Online for: " + Time.calculateTotalTime(new Date(), this.loggedOnTime) + "\n";
 		}
 		if (this.status == "offline") {
-			ret += "Logged off at: " + Time.getDateString(this.loggedOffTime) + "\n";
+			ret += "Last seen online: " + Time.getDateString(this.loggedOffTime) + "\n";
 			ret += "Offline for: " + Time.calculateTotalTime(new Date(), this.loggedOffTime) + "\n";
 		}
 		return ret;
@@ -425,8 +381,36 @@ class TimeLog {
 		console.log("[LOG] (" + Time.getTimeString(new Date()) + ") " + text);
 	}
 }
+
+{ // command classes
+	{	// Command classes
+		/**
+		 * Command container
+		 */
+		class CommandList {
+			constructor() {
+				this.cmds = {};
+			}
+
+			add(cmd_obj) {
+				this.cmds[cmd_obj.cmd] = cmd_obj;
+			}
+
+			addAll() {
+			}
+		}
+
+		/**
+		 * A command class to store a specific command
+		 */
+		class Command {
+
+		}
+	}
+}
 // ------------------------------------------------
 
+const commands = ".\n.fu\n.stupid bot\n.shit\n.rust <item>\n.coffee\n.status <username>\n.reg <username>";
 
 const fuckyou = ". \n" +
 	"........................./´¯/) \n" +
