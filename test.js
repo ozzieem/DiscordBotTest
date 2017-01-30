@@ -9,6 +9,72 @@ client.connect({
 	token: 'Mjc0NTU4NjY1NjQwNjQwNTEy.C2z27A.JUGs7m0PgMSYTFZgaO-02ZGIpFc'
 });
 
+// ---------------- FUNCTIONS ---------------------
+{
+	function getRestStr(str, sep) {
+		var extWord = str.substr(str.indexOf(sep) + 1);
+		return extWord;
+	}
+
+	function getFirstWord(str, sep) {
+		var firstWord = str.substr(0, str.indexOf(sep));
+		return firstWord;
+	}
+
+	function addUsersOnServer(guild) {
+		var onlineUsers = client.Users.onlineMembersForGuild(guild);
+		var offlineUsers = client.Users.offlineMembersForGuild(guild);
+
+		TimeLog.log("Adding all users on server");
+		onlineUsers.forEach(function (onlineUser) {
+			ServerUsers.add(
+				onlineUser.username,
+				new UserClass(
+					onlineUser.username,
+					onlineUser.status,
+					onlineUser.registeredAt
+				)
+			);
+		});
+		TimeLog.log("Online users added: " + onlineUsers.length);
+
+		offlineUsers.forEach(function (offlineUser) {
+			ServerUsers.add(
+				offlineUser.username,
+				new UserClass(
+					offlineUser.username,
+					offlineUser.status,
+					offlineUser.registeredAt
+				)
+			);
+		});
+		TimeLog.log("Offline users added: " + offlineUsers.length);
+		TimeLog.log("Total users added: " + ServerUsers.size());
+	}
+
+	function respondToUserCommand(event, msg) {
+		TimeLog.log("Sent message: " + msg + " to: " + event.message.channel.name);
+		event.message.channel.sendMessage(msg);
+	}
+
+	function checkUserRole(roles, rname) {
+		var role = roles.filter(r => (r.name == rname))[0];
+		if (role != undefined) {
+			return true;
+		}
+		return false;
+	}
+
+	function getChannel(cname) {
+		return client.Channels.filter(c => (c.name == cname))[0];
+	}
+
+	function getUser(uname) {
+		return client.Users.filter(u => (u.username == uname))[0];
+	}
+}
+// ------------------------------------------------
+
 
 // ---------------- BOT-SETUP ---------------------
 
@@ -136,73 +202,6 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 		};
 	}
 });
-
-
-// ---------------- FUNCTIONS ---------------------
-{
-	function getRestStr(str, sep) {
-		var extWord = str.substr(str.indexOf(sep) + 1);
-		return extWord;
-	}
-
-	function getFirstWord(str, sep) {
-		var firstWord = str.substr(0, str.indexOf(sep));
-		return firstWord;
-	}
-
-	function addUsersOnServer(guild) {
-		var onlineUsers = client.Users.onlineMembersForGuild(guild);
-		var offlineUsers = client.Users.offlineMembersForGuild(guild);
-
-		TimeLog.log("Adding all users on server");
-		onlineUsers.forEach(function (onlineUser) {
-			ServerUsers.add(
-				onlineUser.username,
-				new UserClass(
-					onlineUser.username,
-					onlineUser.status,
-					onlineUser.registeredAt
-				)
-			);
-		});
-		TimeLog.log("Online users added: " + onlineUsers.length);
-
-		offlineUsers.forEach(function (offlineUser) {
-			ServerUsers.add(
-				offlineUser.username,
-				new UserClass(
-					offlineUser.username,
-					offlineUser.status,
-					offlineUser.registeredAt
-				)
-			);
-		});
-		TimeLog.log("Offline users added: " + offlineUsers.length);
-		TimeLog.log("Total users added: " + ServerUsers.size());
-	}
-
-	function respondToUserCommand(event, msg) {
-		TimeLog.log("Sent message: " + msg + " to: " + event.message.channel.name);
-		event.message.channel.sendMessage(msg);
-	}
-
-	function checkUserRole(roles, rname) {
-		var role = roles.filter(r => (r.name == rname))[0];
-		if (role != undefined) {
-			return true;
-		}
-		return false;
-	}
-
-	function getChannel(cname) {
-		return client.Channels.filter(c => (c.name == cname))[0];
-	}
-
-	function getUser(uname) {
-		return client.Users.filter(u => (u.username == uname))[0];
-	}
-}
-// ------------------------------------------------
 
 // ---------------- CLASSES -----------------------
 
