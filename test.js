@@ -11,22 +11,22 @@ client.connect({
 
 // ---------------- FUNCTIONS ---------------------
 {
-	function getRestStr(str, sep) {
+	var getRestStr = function(str, sep) {
 		var extWord = str.substr(str.indexOf(sep) + 1);
 		return extWord;
 	}
 
-	function getFirstWord(str, sep) {
+	var getFirstWord = function(str, sep) {
 		var firstWord = str.substr(0, str.indexOf(sep));
 		return firstWord;
 	}
 
-	function respondToUserCommand(event, msg) {
+	var respondToUserCommand = function(event, msg) {
 		TimeLog.log("Sent message: " + msg + " to: " + event.message.channel.name);
 		event.message.channel.sendMessage(msg);
 	}
 
-	function checkUserRole(roles, rname) {
+	var checkUserRole = function(roles, rname) {
 		var role = roles.filter(r => (r.name == rname))[0];
 		if (role != undefined) {
 			return true;
@@ -34,11 +34,11 @@ client.connect({
 		return false;
 	}
 
-	function getChannel(cname) {
+	var getChannel = function(cname) {
 		return client.Channels.filter(c => (c.name == cname))[0];
 	}
 
-	function getUser(uname) {
+	var getUser = function(uname) {
 		return client.Users.filter(u => (u.username == uname))[0];
 	}
 }
