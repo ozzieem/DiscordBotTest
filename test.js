@@ -21,37 +21,6 @@ client.connect({
 		return firstWord;
 	}
 
-	function addUsersOnServer(guild) {
-		var onlineUsers = client.Users.onlineMembersForGuild(guild);
-		var offlineUsers = client.Users.offlineMembersForGuild(guild);
-
-		TimeLog.log("Adding all users on server");
-		onlineUsers.forEach(function (onlineUser) {
-			ServerUsers.add(
-				onlineUser.username,
-				new UserClass(
-					onlineUser.username,
-					onlineUser.status,
-					onlineUser.registeredAt
-				)
-			);
-		});
-		TimeLog.log("Online users added: " + onlineUsers.length);
-
-		offlineUsers.forEach(function (offlineUser) {
-			ServerUsers.add(
-				offlineUser.username,
-				new UserClass(
-					offlineUser.username,
-					offlineUser.status,
-					offlineUser.registeredAt
-				)
-			);
-		});
-		TimeLog.log("Offline users added: " + offlineUsers.length);
-		TimeLog.log("Total users added: " + ServerUsers.size());
-	}
-
 	function respondToUserCommand(event, msg) {
 		TimeLog.log("Sent message: " + msg + " to: " + event.message.channel.name);
 		event.message.channel.sendMessage(msg);
@@ -86,7 +55,34 @@ client.Dispatcher.on(Events.GATEWAY_READY, e => {
 	// Receiving online/offline users on server
 	const guild = client.Guilds.find(g => g.name == "T_CONNECT");
 
-	addUsersOnServer(guild);
+	var onlineUsers = client.Users.onlineMembersForGuild(guild);
+	var offlineUsers = client.Users.offlineMembersForGuild(guild);
+
+	TimeLog.log("Adding all users on server");
+	onlineUsers.forEach(function (onlineUser) {
+		ServerUsers.add(
+			onlineUser.username,
+			new UserClass(
+				onlineUser.username,
+				onlineUser.status,
+				onlineUser.registeredAt
+			)
+		);
+	});
+	TimeLog.log("Online users added: " + onlineUsers.length);
+
+	offlineUsers.forEach(function (offlineUser) {
+		ServerUsers.add(
+			offlineUser.username,
+			new UserClass(
+				offlineUser.username,
+				offlineUser.status,
+				offlineUser.registeredAt
+			)
+		);
+	});
+	TimeLog.log("Offline users added: " + offlineUsers.length);
+	TimeLog.log("Total users added: " + ServerUsers.size());
 
 	// ServerUsers.ToString();
 });
