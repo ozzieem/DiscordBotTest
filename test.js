@@ -32,7 +32,6 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 
 	TimeLog.debug("User " + e.username + " sent message " + content);
 
-	var message;
 	if (content == '.fu') {
 		respondToUserCommand(e, fuckyou);
 	}
@@ -61,7 +60,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 		try {
 			respondToUserCommand(e, ServerUsers.get(usrname).getStatus());
 		} catch (err) {
-			respondToUserCommand(e, "Username " + usrname + " does not exist, you shitter");
+			respondToUserCommand(e, err.message + "Username " + usrname + " does not exist, you shitter");
 		}
 	}
 	if (content.substr(0, content.indexOf(' ')) == ".registered") {
@@ -189,7 +188,7 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 
 // ---------------- CLASSES -----------------------
 { // command classes
-	const commands = ".\n.fu\n.stupid bot\n.shit\n.rust <item>\n.coffee\n.status <username>\n.registered <username>";	
+	const commands = ".\n.fu\n.stupid bot\n.shit\n.rust <item>\n.coffee\n.status <username>\n.registered <username>";
 	{	// Command classes
 		/**
 		 * Command container
@@ -286,8 +285,8 @@ class UserClass {
 	constructor(name, status, registered) {
 		this.name = name;
 		this.gameTime = new Time();
-		this.loggedOnTime = Time.now();
-		this.loggedOffTime = "Undetected";
+		this.loggedOnTime = new Date();
+		this.loggedOffTime = new Date();
 		this.status = status;
 		this.registered = registered;
 	};
@@ -298,25 +297,37 @@ class UserClass {
 	}
 
 	endGame(prevGame) {
-		return this.name + " stopped playing " + prevGame + ". " + this.gameTime.calculateTotalTime();
+		this.gameTime.endTimer();
+		return this.name + " stopped playing " + prevGame + ".Duration: " +
+			Time.calculateTotalTime(
+				this.gameTime.end,
+				this.gameTime.start
+			);
 	}
 
 	setOnline() {
-		this.loggedOnTime = Time.now();
+		this.status = "online";
+		this.loggedOnTime = new Date();
 		TimeLog.debug("User " + this.name + " loggedOnTime set to - " + this.loggedOnTime);
 	}
 
 	setOffline() {
-		this.loggedOffTime = Time.now();
+		this.status = "offline"
+		this.loggedOffTime = new Date();
 		TimeLog.debug("User " + this.name + " loggedOffTime set to - " + this.loggedOffTime);
 	}
 
 	getStatus() {
-		return (
-			"Status for " + this.name + "\n" +
-			"Online: " + this.loggedOnTime + "\n" +
-			"Offline: " + this.loggedOffTime
-		);
+		var ret = "Status for " + this.name + ":\n";
+		if (this.status == "online") {
+			ret += "Logged in at: " + Time.getDateString(this.loggedOnTime) + "\n";
+			ret += "Online for: " + Time.calculateTotalTime(new Date(), this.loggedOnTime) + "\n";
+		}
+		if (this.status == "offline") {
+			ret += "Logged off at: " + Time.getDateString(this.loggedOffTime) + "\n";
+			ret += "Offline for: " + Time.calculateTotalTime(new Date(), this.loggedOffTime) + "\n";
+		}
+		return ret;
 	}
 
 	getRegistered() {
@@ -328,6 +339,15 @@ class UserClass {
 	}
 }
 
+
+class UserLog {
+	constructor() {
+		this.logonTime = new Date();
+		this.logoffTime = new Date();
+	}
+}
+
+
 /**
  * Custom class for time-managing
  */
@@ -338,13 +358,27 @@ class Time {
 		this.duration = 0;
 	};
 
-	static now() {
-		var d = new Date();
+	static getTimeString(d) {
 		var h = (d.getHours() < 10 ? '0' : '') + d.getHours();
 		var m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
 		var s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
 
 		return h + ':' + m + ':' + s;
+	}
+
+	static getDateString(d) {
+		var h = (d.getHours() < 10 ? '0' : '') + d.getHours();
+		var m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+		var s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
+
+		var dd = (d.getDate() < 10 ? '0' : '') + d.getDate();
+		var mm = ((d.getMonth() + 1) < 10 ? '0' : '') + (d.getMonth() + 1); //January is 0!
+		var yyyy = d.getFullYear();
+
+		var time = h + ':' + m + ':' + s;
+		var date = yyyy + '-' + mm + '-' + dd;
+
+		return time + " (" + date + ")";
 	}
 
 	startTimer() {
@@ -355,15 +389,14 @@ class Time {
 		this.end = new Date();
 	};
 
-	calculateTotalTime() {
-		this.endTimer();
-		var time = Math.floor((this.end.getTime() - this.start.getTime()) / 1000);
+	static calculateTotalTime(end, start) {
+		var time = Math.floor((end.getTime() - start.getTime()) / 1000);
 
 		var hours = Math.floor(time / 3600);
 		var minutes = Math.floor((time % 3600) / 60);
 		var seconds = time % 60;
 
-		var time_str = "Duration: ";
+		var time_str = "";
 
 		if (hours > 0) {
 			time_str += hours + "h ";
@@ -379,16 +412,17 @@ class Time {
 	};
 }
 
+
 /**
  * Class for printing messages to console with time
  */
 class TimeLog {
 	static debug(text) {
-		console.log("[DEBUG] (" + Time.now() + ") " + text);
+		console.log("[DEBUG] (" + Time.getTimeString(new Date()) + ") " + text);
 	}
 
 	static log(text) {
-		console.log("[LOG] (" + Time.now() + ") " + text);
+		console.log("[LOG] (" + Time.getTimeString(new Date()) + ") " + text);
 	}
 }
 // ------------------------------------------------
