@@ -140,7 +140,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 			try {
 				respondToUserCommand(e, ServerUsers.get(usrname).getStatus());
 			} catch (err) {
-				respondToUserCommand(e, err.message + "Username '" + usrname + "' does not exist, you shitter");
+				respondToUserCommand(e, "Username '" + usrname + "' does not exist, you shitter");
 			}
 		} break;
 		case ".reg": {
@@ -168,15 +168,22 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 	var status = e.user.status;
 	var prevStatus = e.user.previousStatus;
 
-	if (status != prevStatus) {
-		if (status == "online" && prevStatus == "offline") {
-			user.setOnline();
-			TimeLog.log("User logged in: " + ServerUsers.get(e.user.username).name)
+	try {
+
+		if (status != prevStatus) {
+			if (status == "online" && prevStatus == "offline") {
+				user.setOnline();
+				TimeLog.log("User logged in: " + ServerUsers.get(e.user.username).name)
+			}
+			else if (status == "offline" && prevStatus == "online") {
+				user.setOffline();
+				TimeLog.log("User disconnected: " + ServerUsers.get(e.user.username).name);
+			}
 		}
-		else if (status == "offline" && prevStatus == "online") {
-			user.setOffline();
-			TimeLog.log("User disconnected: " + ServerUsers.get(e.user.username).name);
-		}
+	}
+	catch (err) {
+		TimeLog.debug("New user detected. " + e.user.username + ". Adding to serverUsers\n");
+		ServerUsers.add(e.user.username, e.user.status, e.user.registeredAt);
 	}
 
 	var game = e.user.gameName;
