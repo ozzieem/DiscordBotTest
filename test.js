@@ -9,6 +9,184 @@ client.connect({
 	token: 'Mjc0NTU4NjY1NjQwNjQwNTEy.C2z27A.JUGs7m0PgMSYTFZgaO-02ZGIpFc'
 });
 
+// ---------------- BOT-SETUP ---------------------
+
+client.Dispatcher.on(Events.GATEWAY_READY, e => {
+	TimeLog.log("Connected as: " + client.User.username);
+
+	ServerUsers.create();
+
+	// Receiving online/offline users on server
+	const guild = client.Guilds.find(g => g.name == "T_CONNECT");
+	addUsersOnServer(guild);
+
+	// ServerUsers.ToString();
+});
+
+// ---------------- MESSAGE-UPDATES ---------------------
+
+client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
+	var content = e.message.content;
+
+	TimeLog.debug("User " + e.message.author.username + " sent message " + content + " in channel " + e.message.channel.name);
+
+	// Standard commands
+	switch (content) {
+		case ".fu": {
+			respondToUserCommand(e, fuckyou);
+		} break;
+		case ".stupid bot": {
+			respondToUserCommand(e, "Actually, I'm a shitty bot. Get it right, you little bitch.");
+		} break;
+		case ".shit": {
+			respondToUserCommand(e, ":poop:");
+		} break;
+		case ".help": {
+			respondToUserCommand(e, "Computer says no.");
+		} break;
+		case ".commands": {
+			respondToUserCommand(e, commands);
+		} break;
+		case ".coffee": {
+			respondToUserCommand(e, "Grinding coffee-beans...");
+			setTimeout(function () { respondToUserCommand(e, "Placing ground coffee in filter...") }, 3000);
+			setTimeout(function () { respondToUserCommand(e, "Brewing coffee...") }, 5000);
+			setTimeout(function () { respondToUserCommand(e, "Enjoy your shitty coffee. :poop: :coffee:") }, 10000);
+		} break;
+		case ".uptime": {
+			var startTimeBot = ServerUsers.timeCreated;
+			var uptimeBot = Time.calculateTotalTime(new Date(), startTimeBot);
+			respondToUserCommand(e, "Bot uptime: " + uptimeBot + "\nSince " + Time.getDateString(startTimeBot));
+		}
+
+		default: {
+
+		} break;
+	}
+
+	// Double word commands
+	switch (getFirstWord(content, ' ')) {
+		case ".rust": {
+			var link = "http://rust.wikia.com/wiki/";
+			var search_item = getRestStr(content, ' ');
+			link += search_item;
+			respondToUserCommand(e, link);
+		} break;
+		case ".status": {
+			var usrname = getRestStr(content, ' ');
+			try {
+				respondToUserCommand(e, ServerUsers.get(usrname).getStatus());
+			} catch (err) {
+				respondToUserCommand(e, "Username '" + usrname + "' does not exist, you shitter");
+			}
+		} break;
+		case ".reg": {
+			var usrname = getRestStr(content, ' ');
+			try {
+				respondToUserCommand(e, ServerUsers.get(usrname).getRegistered());
+			} catch (err) {
+				respondToUserCommand(e, "Username '" + usrname + "' does not exist, you shitter");
+			}
+		} break;
+		case ".annoy": {
+			var subCmd = getRestStr(content, ' ');
+			if (subCmd == "toggle") {
+				toggleAnnoyance = toggleAnnoyance ? false : true;
+				TimeLog.log("Typing-annoyance toggled to: " + toggleAnnoyance);
+			}
+			else {
+				try {
+					userAnnoy = ServerUsers.get(subCmd).name;
+					TimeLog.log("Typing-annoyance listening for: " + userAnnoy + ".");					
+				} catch (err) {
+					respondToUserCommand(e, "Username '" + usrname + "' does not exist, you shitter");
+				}
+			}
+		}
+
+		default: {
+
+		} break;
+	}
+});
+
+// ---------------- USER-UPDATES  ---------------------
+
+client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
+
+	var user = ServerUsers.get(e.user.username);
+
+	var status = e.user.status;
+	var prevStatus = e.user.previousStatus;
+
+	try {
+
+		if (status != prevStatus) {
+			if (status == "online" && prevStatus == "offline") {
+				user.setOnline();
+				TimeLog.log("User logged in: " + ServerUsers.get(e.user.username).name)
+			}
+			else if (status == "offline" && prevStatus == "online") {
+				user.setOffline();
+				TimeLog.log("User disconnected: " + ServerUsers.get(e.user.username).name);
+			}
+		}
+	}
+	catch (err) {
+		TimeLog.debug("New user detected. " + e.user.username + ". Adding to serverUsers\n");
+		ServerUsers.add(e.user.username, e.user.status, e.user.registeredAt);
+	}
+
+	var game = e.user.gameName;
+	var prevGame = e.user.previousGameName;
+
+	var channel = getChannel("bottesting");
+
+	if (game != prevGame) {
+		var message;
+		if (checkUserRole(e.member.roles, "Master")) {
+			if (game != null) {
+				message = user.startGame(game);
+			} else if (prevGame != null) {
+				if (user.gameTime.start != 0) {
+					message = user.endGame(prevGame);
+				}
+				else {
+					message = user.name + " stopped playing " + prevGame;
+				}
+			}
+			TimeLog.log(message);
+			channel.sendMessage(message)
+		};
+	}
+});
+
+client.Dispatcher.on(Events.GUILD_MEMBER_ADD, e => {
+	ServerUsers.add(
+		e.member.username,
+		new UserClass(
+			e.member.username,
+			e.member.username.status,
+			e.member.registeredAt
+		)
+	);
+	TimeLog.log("Added new user to server: " + e.member.username);
+});
+
+client.Dispatcher.on(Events.GUILD_MEMBER_REMOVE, e => {
+	ServerUsers.remove(e.member.username);
+	TimeLog.log("Removed user from server: " + e.member.username);
+});
+
+var toggleAnnoyance = true;
+var userAnnoy = "Coffefox";
+client.Dispatcher.on(Events.TYPING_START, e => {
+	if ((e.user.username == userAnnoy) && toggleAnnoyance) {
+		var msg = e.user.username + " is typing something very important right now...";
+		e.channel.sendMessage(msg);
+	}
+});
+
 // ---------------- FUNCTIONS ---------------------
 {
 	function getRestStr(str, sep) {
@@ -75,141 +253,6 @@ client.connect({
 }
 // ------------------------------------------------
 
-
-// ---------------- BOT-SETUP ---------------------
-
-client.Dispatcher.on(Events.GATEWAY_READY, e => {
-	TimeLog.log("Connected as: " + client.User.username);
-
-	ServerUsers.create();
-
-	// Receiving online/offline users on server
-	const guild = client.Guilds.find(g => g.name == "T_CONNECT");
-
-	addUsersOnServer(guild);
-
-	// ServerUsers.ToString();
-});
-
-// ---------------- MESSAGE-UPDATES ---------------------
-
-client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
-	var content = e.message.content;
-
-	TimeLog.debug("User " + e.message.author.username + " sent message " + content + " in channel " + e.message.channel.name);
-
-	// Standard commands
-	switch (content) {
-		case ".fu": {
-			respondToUserCommand(e, fuckyou);
-		} break;
-		case ".stupid bot": {
-			respondToUserCommand(e, "Actually, I'm a shitty bot. Get it right, you little bitch.");
-		} break;
-		case ".shit": {
-			respondToUserCommand(e, ":poop:");
-		} break;
-		case ".help": {
-			respondToUserCommand(e, "Computer says no.");
-		} break;
-		case ".commands": {
-			respondToUserCommand(e, commands);
-		} break;
-		case ".coffee": {
-			respondToUserCommand(e, "Grinding coffee-beans...");
-			setTimeout(function () { respondToUserCommand(e, "Placing ground coffee in filter...") }, 3000);
-			setTimeout(function () { respondToUserCommand(e, "Brewing coffee...") }, 5000);
-			setTimeout(function () { respondToUserCommand(e, "Enjoy your shitty coffee. :poop: :coffee:") }, 10000);
-		} break;
-
-		default: {
-
-		} break;
-	}
-
-	// Double word commands
-	switch (getFirstWord(content, ' ')) {
-		case ".rust": {
-			var link = "http://rust.wikia.com/wiki/";
-			var search_item = getRestStr(content, ' ');
-			link += search_item;
-			respondToUserCommand(e, link);
-		} break;
-		case ".status": {
-			var usrname = getRestStr(content, ' ');
-			try {
-				respondToUserCommand(e, ServerUsers.get(usrname).getStatus());
-			} catch (err) {
-				respondToUserCommand(e, "Username '" + usrname + "' does not exist, you shitter");
-			}
-		} break;
-		case ".reg": {
-			var usrname = getRestStr(content, ' ');
-			try {
-				respondToUserCommand(e, ServerUsers.get(usrname).getRegistered());
-			} catch (err) {
-				respondToUserCommand(e, "Username '" + usrname + "' does not exist, you shitter");
-			}
-		} break;
-
-		default: {
-
-		} break;
-	}
-});
-
-
-// ---------------- USER-UPDATES  ---------------------
-
-client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
-
-	var user = ServerUsers.get(e.user.username);
-
-	var status = e.user.status;
-	var prevStatus = e.user.previousStatus;
-
-	try {
-
-		if (status != prevStatus) {
-			if (status == "online" && prevStatus == "offline") {
-				user.setOnline();
-				TimeLog.log("User logged in: " + ServerUsers.get(e.user.username).name)
-			}
-			else if (status == "offline" && prevStatus == "online") {
-				user.setOffline();
-				TimeLog.log("User disconnected: " + ServerUsers.get(e.user.username).name);
-			}
-		}
-	}
-	catch (err) {
-		TimeLog.debug("New user detected. " + e.user.username + ". Adding to serverUsers\n");
-		ServerUsers.add(e.user.username, e.user.status, e.user.registeredAt);
-	}
-
-	var game = e.user.gameName;
-	var prevGame = e.user.previousGameName;
-
-	var channel = getChannel("bottesting");
-
-	if (game != prevGame) {
-		var message;
-		if (checkUserRole(e.member.roles, "Master")) {
-			if (game != null) {
-				message = user.startGame(game);
-			} else if (prevGame != null) {
-				if (user.gameTime.start != 0) {
-					message = user.endGame(prevGame);
-				}
-				else {
-					message = user.name + " stopped playing " + prevGame;
-				}
-			}
-			TimeLog.log(message);
-			channel.sendMessage(message)
-		};
-	}
-});
-
 // ---------------- CLASSES -----------------------
 
 /**
@@ -218,10 +261,15 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 class ServerUsers {
 	static create() {
 		this.dict = {};
+		this.timeCreated = new Date();
 	}
 
 	static add(username, user) {
 		this.dict[username] = user;
+	}
+
+	static remove(username) {
+		delete this.dict[username];
 	}
 
 	static get(username) {
@@ -280,7 +328,7 @@ class UserClass {
 	}
 
 	getStatus() {
-		var ret = "Status " + this.name + ": " + this.status + "\n";
+		var ret = "\nStatus " + this.name + ": " + this.status + "\n";
 		if (this.status == "online") {
 			ret += "Logged in at: " + Time.getDateString(this.loggedOnTime) + "\n";
 			ret += "Online for: " + Time.calculateTotalTime(new Date(), this.loggedOnTime) + "\n";
@@ -416,7 +464,7 @@ class TimeLog {
 }
 // ------------------------------------------------
 
-const commands = ".\n.fu\n.stupid bot\n.shit\n.rust <item>\n.coffee\n.status <username>\n.reg <username>";
+const commands = ".\n.fu\n.stupid bot\n.shit\n.rust <item>\n.coffee\n.status <username>\n.reg <username>\n.uptime";
 
 const fuckyou = ". \n" +
 	"........................./´¯/) \n" +
