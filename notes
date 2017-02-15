@@ -1,0 +1,2 @@
+---Bot should clean up its own messages---
+TODO: Create a collection in user class which stores messages that are sent to the channel in forms of IMessage inside respondToUser function
