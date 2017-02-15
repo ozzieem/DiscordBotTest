@@ -178,8 +178,8 @@ client.Dispatcher.on(Events.GUILD_MEMBER_REMOVE, e => {
 	TimeLog.log("Removed user from server: " + e.member.username);
 });
 
-var toggleAnnoyance = true;
-var userAnnoy = "Coffefox";
+var toggleAnnoyance = false;
+var userAnnoy = "Coffeefox";
 client.Dispatcher.on(Events.TYPING_START, e => {
 	if ((e.user.username == userAnnoy) && toggleAnnoyance) {
 		var msg = e.user.username + " is typing something very important right now...";
@@ -309,9 +309,9 @@ class UserClass {
 		return this.name + " started playing " + game;
 	}
 
-	endGame(prevGame) {
+	endGame(game) {
 		this.gameTime.endTimer();
-		return this.name + " stopped playing " + prevGame + ". (Duration: " +
+		return this.name + " stopped playing " + game + ". (" +
 			Time.calculateTotalTime(this.gameTime.end, this.gameTime.start) + ")";
 	}
 
