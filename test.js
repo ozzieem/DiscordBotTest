@@ -9,6 +9,7 @@ client.connect({
 	token: 'Mjc0NTU4NjY1NjQwNjQwNTEy.C2z27A.JUGs7m0PgMSYTFZgaO-02ZGIpFc'
 });
 
+
 // ---------------- BOT-SETUP ---------------------
 
 client.Dispatcher.on(Events.GATEWAY_READY, e => {
@@ -93,14 +94,34 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 			if (subCmd == "toggle") {
 				toggleAnnoyance = toggleAnnoyance ? false : true;
 				TimeLog.log("Typing-annoyance toggled to: " + toggleAnnoyance);
+				respondToUserCommand(e, "Toggled to: " + toggleAnnoyance);
 			}
 			else {
 				try {
 					userAnnoy = ServerUsers.get(subCmd).name;
-					TimeLog.log("Typing-annoyance listening for: " + userAnnoy + ".");					
+					TimeLog.log("Typing-annoyance listening for: " + userAnnoy + ".");		
+					respondToUserCommand(e, "Annoy is set to: " +  userAnnoy);								
 				} catch (err) {
 					respondToUserCommand(e, "Username '" + usrname + "' does not exist, you shitter");
 				}
+			}
+		} break;
+		case ".addignore": {
+			var gamename = getRestStr(content, ' ');
+			try {
+				if(checkGame(gamename)) {
+					ignoredGames.push(gamename);
+					var msg = "Added " + gamename + " to ignoredGames: " + ignoredGames;
+					TimeLog.log(msg);
+					respondToUserCommand(e, msg);
+				} 
+				else {
+					throw "Game is already in ignore";
+				}
+			} catch(err) {
+				err_msg = "Unable to add " + gamename + " to ignore: ";
+				TimeLog.error(err_msg + err)
+				respondToUserCommand(e, err_msg + err);
 			}
 		}
 
@@ -144,19 +165,21 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 
 	if (game != prevGame) {
 		var message;
+		TimeLog.debug(user.name + " game: " + game + " | prevgame: " + prevGame)		
 		if (checkUserRole(e.member.roles, "Master")) {
-			if (game != null) {
+			if (checkGame(game)) {
 				message = user.startGame(game);
-			} else if (prevGame != null) {
+				channel.sendMessage(message)				
+			} 
+			else if (checkGame(prevGame)) {
 				if (user.gameTime.start != 0) {
 					message = user.endGame(prevGame);
 				}
 				else {
 					message = user.name + " stopped playing " + prevGame;
 				}
+				channel.sendMessage(message)														
 			}
-			TimeLog.log(message);
-			channel.sendMessage(message)
 		};
 	}
 });
@@ -189,6 +212,21 @@ client.Dispatcher.on(Events.TYPING_START, e => {
 
 // ---------------- FUNCTIONS ---------------------
 {
+	ignoredGames = ["LyX", "Unity"]	
+	
+	// Returns true if game is not in ignore and is not null, else returns false
+	function checkGame(gameName) {
+		var inIgnored = ignoredGames.indexOf(gameName) > -1;
+		if(gameName != null) {
+			if(inIgnored) {
+				TimeLog.debug(gameName + " is ignored. Not sending out message about it");					
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
 	function getRestStr(str, sep) {
 		var extWord = str.substr(str.indexOf(sep) + 1);
 		return extWord;
@@ -433,6 +471,10 @@ class TimeLog {
 
 	static log(text) {
 		console.log("[LOG] (" + Time.getTimeString(new Date()) + ") " + text);
+	}
+
+	static error(text) {
+		console.log("[ERROR] (" + Time.getTimeString(new Date()) + ") " + text);		
 	}
 }
 
