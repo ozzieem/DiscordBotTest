@@ -202,11 +202,12 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 		if (checkUserRole(e.member.roles, "Master")) {
 			if (checkGame(game)) {
 				message = user.startGame(game);
+				channel.sendMessage(message);				
 			} 
 			else if (checkGame(prevGame)) {
 				message = user.endGame(prevGame);
+				channel.sendMessage(message);
 			}
-			channel.sendMessage(message)												
 			// TimeLog.debug(message)
 			
 		};
