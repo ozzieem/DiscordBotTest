@@ -5,6 +5,8 @@ try { Discordie = require('discordie'); } catch (e) { }
 const client = new Discordie({ autoReconnect: true });
 const Events = Discordie.Events;
 
+var colors = require('colors/safe');
+
 client.connect({
 	token: 'Mjc0NTU4NjY1NjQwNjQwNTEy.C2z27A.JUGs7m0PgMSYTFZgaO-02ZGIpFc'
 });
@@ -29,7 +31,9 @@ client.Dispatcher.on(Events.GATEWAY_READY, e => {
 client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 	var content = e.message.content;
 
-	TimeLog.debug("User " + e.message.author.username + " sent message " + content + " in channel " + e.message.channel.name);
+	TimeLog.debug("User " + e.message.author.username + " sent message '" + content + "' in channel " + e.message.channel.name);
+
+	setDeleteMessage(e.message);
 
 	// Standard commands
 	switch (content) {
@@ -58,7 +62,19 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 			var startTimeBot = ServerUsers.timeCreated;
 			var uptimeBot = Time.calculateTotalTime(new Date(), startTimeBot);
 			respondToUserCommand(e, "Bot uptime: " + uptimeBot + "\nSince " + Time.getDateString(startTimeBot));
-		}
+		} break;
+		case ".cc": {
+			var msg_ch = e.message.channel;
+			var msgs = msg_ch.messages;
+			
+			// TimeLog.debug(msg_ch + " messages: " + msgs.length);
+			// msgs.forEach(function (Imsg) {
+			// 	TimeLog.debug("msg: " + Imsg); 
+			// });
+
+			respondToUserCommand(e, "Channel created: " + msg_ch.createdAt);
+			
+		} break;
 
 		default: {
 
@@ -116,14 +132,30 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 					respondToUserCommand(e, msg);
 				} 
 				else {
-					throw "Game is already in ignore";
+					throw "Game is already ignored";
 				}
 			} catch(err) {
 				err_msg = "Unable to add " + gamename + " to ignore: ";
 				TimeLog.error(err_msg + err)
 				respondToUserCommand(e, err_msg + err);
 			}
-		}
+		} break;
+		case ".msgdeltimer": {
+			var desiredtimer = getRestStr(content, ' ');
+			try {
+				var isnum = /^\d+$/.test(desiredtimer);
+				if(isnum) {
+					bot_msg_timer = usr_msg_timer = desiredtimer;
+					TimeLog.log("bot_msg_timer & usr_msg_timer is now set to " + bot_msg_timer);
+					respondToUserCommand(e, "MessageDeleteTimer is now " + bot_msg_timer);					
+				}
+			}
+			catch (err) {
+				err_msg = "Unable to set timer";
+				TimeLog.error(err_msg + err)
+				respondToUserCommand(e, err_msg + err);
+			}
+		} break;
 
 		default: {
 
@@ -154,7 +186,7 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 		}
 	}
 	catch (err) {
-		TimeLog.debug("New user detected. " + e.user.username + ". Adding to serverUsers\n");
+		TimeLog.debug("New user detected: " + e.user.username + ". Adding to serverUsers\n");
 		ServerUsers.add(e.user.username, e.user.status, e.user.registeredAt);
 	}
 
@@ -165,21 +197,18 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 
 	if (game != prevGame) {
 		var message;
-		TimeLog.debug(user.name + " game: " + game + " | prevgame: " + prevGame)		
+		TimeLog.debug(user.name + " game: " + game + " | prevgame: " + prevGame)	
+
 		if (checkUserRole(e.member.roles, "Master")) {
 			if (checkGame(game)) {
 				message = user.startGame(game);
-				channel.sendMessage(message)				
 			} 
 			else if (checkGame(prevGame)) {
-				if (user.gameTime.start != 0) {
-					message = user.endGame(prevGame);
-				}
-				else {
-					message = user.name + " stopped playing " + prevGame;
-				}
-				channel.sendMessage(message)														
+				message = user.endGame(prevGame);
 			}
+			channel.sendMessage(message)												
+			// TimeLog.debug(message)
+			
 		};
 	}
 });
@@ -212,7 +241,7 @@ client.Dispatcher.on(Events.TYPING_START, e => {
 
 // ---------------- FUNCTIONS ---------------------
 {
-	ignoredGames = ["LyX", "Unity"]	
+	ignoredGames = ["", "Unity"]	
 	
 	// Returns true if game is not in ignore and is not null, else returns false
 	function checkGame(gameName) {
@@ -225,6 +254,36 @@ client.Dispatcher.on(Events.TYPING_START, e => {
 			return true;
 		}
 		return false;
+	}
+	
+	function respondToUserCommand(event, msg) {
+		TimeLog.log("Sent message: " + msg + " to: " + event.message.channel.name);
+		event.message.channel.sendMessage(msg);
+	}
+
+
+	var bot_msg_timer = 40000000;
+	var usr_msg_timer = 40000000;
+	// deletes a specific message after some time
+	// may be implemeted directly into the userclass with an array of messages
+	// TODO: Implement so that the bot removes messages only after a limit of messages
+	function setDeleteMessage(emsg) {
+
+		try {
+			if(emsg.channel.name == "bottesting") {
+				if(emsg.author.username == client.User.username) {
+					setTimeout(() => { emsg.delete() }, bot_msg_timer);
+				}
+				else {
+					setTimeout(() => { emsg.delete().catch((onRejected) => {
+						TimeLog.error("Promise-rejection: Message could not be deleted");
+					}) }, usr_msg_timer);
+				}
+			}
+		} 
+		catch(err) {
+			TimeLog.error("Error when deleting message" + err);
+		}
 	}
 
 	function getRestStr(str, sep) {
@@ -266,11 +325,6 @@ client.Dispatcher.on(Events.TYPING_START, e => {
 		});
 		TimeLog.log("Offline users added: " + offlineUsers.length);
 		TimeLog.log("Total users added: " + ServerUsers.size());
-	}
-
-	function respondToUserCommand(event, msg) {
-		TimeLog.log("Sent message: " + msg + " to: " + event.message.channel.name);
-		event.message.channel.sendMessage(msg);
 	}
 
 	function checkUserRole(roles, rname) {
@@ -344,25 +398,29 @@ class UserClass {
 
 	startGame(game) {
 		this.gameTime.startTimer();
-		return this.name + " started playing " + game;
+		return this.name + " initialized " + game;
 	}
 
 	endGame(game) {
 		this.gameTime.endTimer();
-		return this.name + " stopped playing " + game + ". (" +
-			Time.calculateTotalTime(this.gameTime.end, this.gameTime.start) + ")";
+		var dur = Time.calculateTotalTime(this.gameTime.end, this.gameTime.start);
+		var msg = this.name + " quit " + game;		
+		if(this.gameTime.start > 0) {
+			msg += " (" + dur + ")";
+		}
+		return msg;
 	}
 
 	setOnline() {
 		this.status = "online";
 		this.loggedOnTime = new Date();
-		TimeLog.debug("User " + this.name + " loggedOnTime set to - " + this.loggedOnTime);
+		// TimeLog.debug("User " + this.name + " loggedOnTime set to - " + this.loggedOnTime);
 	}
 
 	setOffline() {
 		this.status = "offline"
 		this.loggedOffTime = new Date();
-		TimeLog.debug("User " + this.name + " loggedOffTime set to - " + this.loggedOffTime);
+		// TimeLog.debug("User " + this.name + " loggedOffTime set to - " + this.loggedOffTime);
 	}
 
 	getStatus() {
@@ -403,7 +461,6 @@ class Time {
 	constructor() {
 		this.start = 0;
 		this.end = 0;
-		this.duration = 0;
 	};
 
 	static getTimeString(d) {
@@ -420,7 +477,7 @@ class Time {
 		var s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
 
 		var dd = (d.getDate() < 10 ? '0' : '') + d.getDate();
-		var mm = ((d.getMonth() + 1) < 10 ? '0' : '') + (d.getMonth() + 1); //January is 0!
+		var mm = ((d.getMonth() + 1) < 10 ? '0' : '') + (d.getMonth() + 1); // January is 0
 		var yyyy = d.getFullYear();
 
 		var time = h + ':' + m + ':' + s;
@@ -438,7 +495,7 @@ class Time {
 	};
 
 	static calculateTotalTime(end, start) {
-		var time = Math.floor((end.getTime() - start.getTime()) / 1000);
+		var time = Math.floor((end - start) / 1000);
 
 		var hours = Math.floor(time / 3600);
 		var minutes = Math.floor((time % 3600) / 60);
@@ -465,16 +522,17 @@ class Time {
  * Class for printing messages to console with time
  */
 class TimeLog {
+
 	static debug(text) {
-		console.log("[DEBUG] (" + Time.getTimeString(new Date()) + ") " + text);
+		console.log(colors.yellow("[DBG] (" + Time.getTimeString(new Date()) + ") " + text));
 	}
 
 	static log(text) {
-		console.log("[LOG] (" + Time.getTimeString(new Date()) + ") " + text);
+		console.log(colors.green("[LOG] (" + Time.getTimeString(new Date()) + ") " + text));
 	}
 
 	static error(text) {
-		console.log("[ERROR] (" + Time.getTimeString(new Date()) + ") " + text);		
+		console.log(colors.red("[ERR] (" + Time.getTimeString(new Date()) + ") " + text));		
 	}
 }
 
