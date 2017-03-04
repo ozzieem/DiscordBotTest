@@ -4,10 +4,12 @@ try {
 } catch (e) {
 }
 
+var colors = require("colors/safe");
+var fs = require("fs");
+
+
 const client = new Discordie({ autoReconnect: true });
 const Events = Discordie.Events;
-
-var colors = require("colors/safe");
 
 client.connect({
   token: "Mjc0NTU4NjY1NjQwNjQwNTEy.C2z27A.JUGs7m0PgMSYTFZgaO-02ZGIpFc"
@@ -129,7 +131,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
       respondToUserCommand(e, link);
     }
     break;
-    case ".status": {
+    case ".s": {
       var usrname = getRestStr(content, " ");
       try {
         respondToUserCommand(e, ServerUsers.get(usrname).getStatus());
@@ -191,19 +193,23 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
       }
     }
     break;
-    case ".msgdeltimer": {
-      var desiredtimer = getRestStr(content, " ");
+    case ".mdt": {
+      var time_str = getRestStr(content, " ");
       try {
-        var isnum = /^\d+$/.test(desiredtimer);
-        if (isnum) {
-          msg_del_timer = desiredtimer;
-          TimeLog.log(
-            "msg_del_timer is now set to " + msg_del_timer
-          );
-          respondToUserCommand(e, "MessageDeleteTimer is now " + msg_del_timer);
+        var time = time_str.charAt(0);
+        var time_type  = time_str.charAt(1);
+        var isnum = /^\d+$/.test(time);
+        if (isnum && (time_type == "h" || time_type == "m" || time_type == "s")) {
+          msg = setDeleteTimer(time, time_type);
+          var msg = "MessageDeleteTimer is now set to " + msg_del_timer + "ms from " + time_str;
+          TimeLog.log(msg);
+          respondToUserCommand(e, msg);
+        }
+        else {
+          throw "Unspecified time";          
         }
       } catch (err) {
-        err_msg = "Unable to set timer";
+        err_msg = "Unable to set timer - ";
         TimeLog.error(err_msg + err);
         respondToUserCommand(e, err_msg + err);
       }
@@ -317,7 +323,7 @@ client.Dispatcher.on(Events.TYPING_START, e => {
   // deletes a specific message after some time
   // may be implemeted directly into the userclass with an array of messages
   // TODO: Implement so that the bot removes messages only after a limit of messages
-  var msg_del_timer = 21000; // A bit less than 6 hours  
+  var msg_del_timer = 18000000; // A bit less than 6 hours  
   function setDeleteMessage(emsg) {
     try {
       if (emsg.channel.name == "bottesting" || emsg.channel.name == "ozz") {
@@ -327,7 +333,7 @@ client.Dispatcher.on(Events.TYPING_START, e => {
                 (onFulFilled) => {
                 TimeLog.log("Deleted message by " + emsg.author.username + " (" + emsg + ") in channel - " + emsg.channel.name + " - " + onFulFilled);
               }, (onRejected) => {
-                TimeLog.error("Message by " + emsg.author.username + + " (" + emsg + ") could not be deleted - " + onRejected);
+                TimeLog.error("Message by " + emsg.author.username + + " (" + emsg + ") in channel - " + emsg.channel.name + " could not be deleted - " + onRejected);
               });
             },
             msg_del_timer
@@ -335,6 +341,22 @@ client.Dispatcher.on(Events.TYPING_START, e => {
       }
     } catch (err) {
       TimeLog.error("Error when deleting message" + err);
+    }
+  }
+
+  function setDeleteTimer(timer_amount, timer_type) {
+    switch(timer_type) {
+      case "h": {
+        msg_del_timer = timer_amount * 3600 * 1000; // convert hour to milliseconds
+      } break;
+      case "m": {
+        msg_del_timer = timer_amount * 60 * 1000; // convert minutes to milliseconds
+      } break;
+      case "s": {
+        msg_del_timer = timer_amount * 1000; // convert seconds to milliseconds
+      } break;
+      default: {
+      } break;
     }
   }
 
@@ -571,22 +593,30 @@ class Time {
  */
 class TimeLog {
   static debug(text) {
-    console.log(
-      colors.yellow("[DBG] (" + Time.getTimeString(new Date()) + ") " + text)
-    );
+    var msg = "[DBG] (" + Time.getTimeString(new Date()) + ") " + text;
+    console.log(colors.yellow(msg));
+    this.log_to_file(msg);
   }
 
   static log(text) {
-    console.log(
-      colors.green("[LOG] (" + Time.getTimeString(new Date()) + ") " + text)
-    );
+    var msg = "[LOG] (" + Time.getTimeString(new Date()) + ") " + text;
+    console.log(colors.green(msg));
+    this.log_to_file(msg);
   }
 
   static error(text) {
-    console.log(
-      colors.red("[ERR] (" + Time.getTimeString(new Date()) + ") " + text)
-    );
+    var msg = "[ERR] (" + Time.getTimeString(new Date()) + ") " + text;
+    console.log(colors.red(msg));
+    this.log_to_file(msg);
   }
+
+  static log_to_file(str) {
+    fs.appendFile("./botlogs.txt", str + "\n", (err) => {
+        if(err) {
+            return console.log(colors.red(err));
+        }
+    }); 
+  };
 }
 
 {
