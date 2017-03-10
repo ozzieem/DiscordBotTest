@@ -15,29 +15,28 @@ client.connect({
   token: "Mjc0NTU4NjY1NjQwNjQwNTEy.C2z27A.JUGs7m0PgMSYTFZgaO-02ZGIpFc"
 });
 
-dm_ch = "Should be a channel but is a string -> BAD"
+var TCONNECT_server = ""
+var dm_ch = "Should be a DMchannel but is a string -> BAD"  // TODO: remove this shit
 
 // ---------------- BOT-SETUP ---------------------
 
 client.Dispatcher.on(Events.GATEWAY_READY, e => {
   TimeLog.log("Connected as: " + client.User.username);
-  const TCONNECT_server = client.Guilds.find(g => g.name == "T_CONNECT");  
-
-  const user = TCONNECT_server.members.find(m => m.username == "ozz");
-  const botuser = TCONNECT_server.members.find(m => m.username == "ShitBot");
+  TCONNECT_server = getServer("T_CONNECT");
+    
+  // changes nick at start
+  const botuser = getUser("ShitBot")
   botuser.setNickname("Bot")
-
+  
+  // create Promise to get DM channel
+  const user = getUser("ozz")
   user.openDM().then((result) => {
     dm_ch = result
     dm_ch.sendMessage("TCONNECT_Bot Connected")
   });
 
   ServerUsers.create();
-
-  // Receiving online/offline users on server
   addUsersOnServer(TCONNECT_server);  
-
-  // ServerUsers.ToString();
 });
 
 // ---------------- MESSAGE-UPDATES ---------------------
@@ -252,6 +251,19 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
       }
     }
     break;
+    case ".botnick": {
+      var nickname = getRestStr(content, " ");
+      var bot = getUser("ShitBot")
+      bot.setNickname(nickname).then(()=> {
+        respondToUserCommand(e, "Botnick set to: " + nickname);
+        TimeLog.log("Botnick set to: " + nickname)
+      }, ()=> {
+        err_msg = "Failed to set BotNick"
+        respondToUserCommand(e, err_msg);
+        TimeLog.error(err_msg)
+      })
+    }
+    break;
 
     default: {
     }
@@ -445,11 +457,15 @@ client.Dispatcher.on(Events.TYPING_START, e => {
   }
 
   function getServerChannel(cname) {
-    return TCONNECT_server.channels.filter(c => c.name == cname);
+    return TCONNECT_server.channels.filter(c => c.name == cname)[0];
+  }
+
+  function getServer(sname) {
+    return client.Guilds.find(s => s.name == sname);
   }
 
   function getUser(uname) {
-    return TCONNECT_server.members.filter(u => u.username == uname);
+    return TCONNECT_server.members.filter(u => u.username == uname)[0];
   }
 }
 // ------------------------------------------------
