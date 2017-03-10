@@ -15,16 +15,27 @@ client.connect({
   token: "Mjc0NTU4NjY1NjQwNjQwNTEy.C2z27A.JUGs7m0PgMSYTFZgaO-02ZGIpFc"
 });
 
+dm_ch = "Should be a channel but is a string -> BAD"
+
 // ---------------- BOT-SETUP ---------------------
 
 client.Dispatcher.on(Events.GATEWAY_READY, e => {
   TimeLog.log("Connected as: " + client.User.username);
+  const TCONNECT_server = client.Guilds.find(g => g.name == "T_CONNECT");  
+
+  const user = TCONNECT_server.members.find(m => m.username == "ozz");
+  const botuser = TCONNECT_server.members.find(m => m.username == "ShitBot");
+  botuser.setNickname("Bot")
+
+  user.openDM().then((result) => {
+    dm_ch = result
+    dm_ch.sendMessage("TCONNECT_Bot Connected")
+  });
 
   ServerUsers.create();
 
   // Receiving online/offline users on server
-  const guild = client.Guilds.find(g => g.name == "T_CONNECT");
-  addUsersOnServer(guild);
+  addUsersOnServer(TCONNECT_server);  
 
   // ServerUsers.ToString();
 });
@@ -66,7 +77,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
       respondToUserCommand(e, "Computer says no.");
     }
     break;
-    case ".commands": {
+    case ".cmds": {
       respondToUserCommand(e, commands);
     }
     break;
@@ -215,6 +226,32 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
       }
     }
     break;
+    case ".notify": {
+      var option = getRestStr(content, " ");
+      try {
+        if(option == "toggle") {
+          notifyUpdates = notifyUpdates ? false : true
+          respondToUserCommand(e, "NotifyUpdates set to: " + notifyUpdates);         
+        }
+        else if(option == "show") {
+          respondToUserCommand(e, "NotifyUpdatesChannel: " + notifyUpdateChannel);
+        }
+        else {
+          if(option == "ozz") {
+            notifyUpdateChannel == e.message.channel
+            TimeLog.log("NotifyUpdateChannel set to: ", notifyUpdateChannel.name)
+          } 
+          else {
+            notifyUpdateChannel = getServerChannel(option)
+          }
+          respondToUserCommand(e, "NotifyUpdateChannel set to: " + notifyUpdateChannel.name);          
+        }
+      } catch (err) {
+        TimeLog.error(err);
+        respondToUserCommand(e, err);
+      }
+    }
+    break;
 
     default: {
     }
@@ -223,6 +260,9 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 });
 
 // ---------------- USER-UPDATES  ---------------------
+
+notifyUpdates = true
+notifyUpdateChannel = dm_ch
 
 client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
   var user = ServerUsers.get(e.user.username);
@@ -252,7 +292,7 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
   var game = e.user.gameName;
   var prevGame = e.user.previousGameName;
 
-  var channel = getChannel("bottesting");
+  notifyUpdateChannel = dm_ch
 
   if (game != prevGame) {
     var message;
@@ -261,12 +301,13 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
     if (checkUserRole(e.member.roles, "Master")) {
       if (checkGame(game)) {
         message = user.startGame(game);
-        channel.sendMessage(message);
       } else if (checkGame(prevGame)) {
         message = user.endGame(prevGame);
-        channel.sendMessage(message);
       }
-      // TimeLog.debug(message)
+      if(notifyUpdates) {
+        notifyUpdateChannel.sendMessage(message);        
+      }
+      TimeLog.log(message)
     }
   }
 });
@@ -297,7 +338,7 @@ client.Dispatcher.on(Events.TYPING_START, e => {
 
 // ---------------- FUNCTIONS ---------------------
 {
-  ignoredGames = ["LyX", "Unity"];
+  ignoredGames = ["", "Unity"];
 
   // Returns true if game is not in ignore and is not null, else returns false
   function checkGame(gameName) {
@@ -323,10 +364,10 @@ client.Dispatcher.on(Events.TYPING_START, e => {
   // deletes a specific message after some time
   // may be implemeted directly into the userclass with an array of messages
   // TODO: Implement so that the bot removes messages only after a limit of messages
-  var msg_del_timer = 18000000; // A bit less than 6 hours  
+  var msg_del_timer = 10000000; // initial time - about 3h
   function setDeleteMessage(emsg) {
     try {
-      if (emsg.channel.name == "bottesting" || emsg.channel.name == "ozz") {
+      if (emsg.channel.name == "masters" || emsg.channel.name == "ozz") {
           setTimeout(
             () => {
               emsg.delete().then(
@@ -403,12 +444,12 @@ client.Dispatcher.on(Events.TYPING_START, e => {
     return false;
   }
 
-  function getChannel(cname) {
-    return client.Channels.filter(c => c.name == cname)[0];
+  function getServerChannel(cname) {
+    return TCONNECT_server.channels.filter(c => c.name == cname);
   }
 
   function getUser(uname) {
-    return client.Users.filter(u => u.username == uname)[0];
+    return TCONNECT_server.members.filter(u => u.username == uname);
   }
 }
 // ------------------------------------------------
@@ -647,7 +688,7 @@ class TimeLog {
 }
 // ------------------------------------------------
 
-const commands = ".\n.fu\n.stupid bot\n.shit\n.rust <item>\n.coffee\n.status <username>\n.reg <username>\n.uptime";
+const commands = ".\n.fu\n.stupid bot\n.shit\n.rust <item>\n.help\n.coffee\n.cc\n.notify\n.s <username>\n.reg <username>\n.uptime\n.reg <username>\n";
 
 const fuckyou = ". \n" +
   "........................./´¯/) \n" +
