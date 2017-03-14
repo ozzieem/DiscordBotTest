@@ -31,8 +31,8 @@ client.Dispatcher.on(Events.GATEWAY_READY, e => {
   // create Promise to get DM channel
   const user = getUser("ozz")
   user.openDM().then((result) => {
-    dm_ch = result
-    dm_ch.sendMessage("TCONNECT_Bot Connected")
+    dm_ch = result;
+    dm_ch.sendMessage(Time.getTimeNowString() + "TCONNECT_Bot Connected");
   });
 
   ServerUsers.create();
@@ -40,6 +40,7 @@ client.Dispatcher.on(Events.GATEWAY_READY, e => {
 });
 
 // ---------------- MESSAGE-UPDATES ---------------------
+// This whole command detection function is retarded, will be fixed at some point.. or not..
 
 client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
   var content = e.message.content;
@@ -64,12 +65,8 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
     case ".stupid bot": {
       respondToUserCommand(
         e,
-        "Actually, I'm a shitty bot. Get it right, you little bitch."
+        "Of course I'm stupid, you little bitch, if I was written by a stupid person."
       );
-    }
-    break;
-    case ".shit": {
-      respondToUserCommand(e, ":poop:");
     }
     break;
     case ".help": {
@@ -117,12 +114,6 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
     case ".cc": {
       var msg_ch = e.message.channel;
       var msgs = msg_ch.messages;
-
-      // TimeLog.debug(msg_ch + " messages: " + msgs.length);
-      // msgs.forEach(function (Imsg) {
-      // 	TimeLog.debug("msg: " + Imsg);
-      // });
-
       respondToUserCommand(e, "Channel created: " + msg_ch.createdAt);
     }
     break;
@@ -148,7 +139,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
       } catch (err) {
         respondToUserCommand(
           e,
-          "Username '" + usrname + "' does not exist, you shitter"
+          "Username '" + usrname + "' does not exist"
         );
       }
     }
@@ -160,7 +151,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
       } catch (err) {
         respondToUserCommand(
           e,
-          "Username '" + usrname + "' does not exist, you shitter"
+          "Username '" + usrname + "' does not exist"
         );
       }
     }
@@ -179,7 +170,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
         } catch (err) {
           respondToUserCommand(
             e,
-            "Username '" + usrname + "' does not exist, you shitter"
+            "Username '" + usrname + "' does not exist"
           );
         }
       }
@@ -281,18 +272,22 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 
   var status = e.user.status;
   var prevStatus = e.user.previousStatus;
+  notifyUpdateChannel = dm_ch  
 
   try {
     if (status != prevStatus) {
+      var statusMessage = "";
       if (status == "online" && prevStatus == "offline") {
         user.setOnline();
-        TimeLog.log("User logged in: " + ServerUsers.get(e.user.username).name);
+        statusMessage = "User connected: " + ServerUsers.get(e.user.username).name;
       } else if (status == "offline" && prevStatus == "online") {
         user.setOffline();
-        TimeLog.log(
-          "User disconnected: " + ServerUsers.get(e.user.username).name
-        );
+        statusMessage = "User disconnected: " + ServerUsers.get(e.user.username).name;
       }
+      if(notifyUpdates) {
+        notifyUpdateChannel.sendMessage(statusMessage);        
+      }
+      TimeLog.log(statusMessage)
     }
   } catch (err) {
     TimeLog.debug(
@@ -304,25 +299,25 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
   var game = e.user.gameName;
   var prevGame = e.user.previousGameName;
 
-  notifyUpdateChannel = dm_ch
 
   if (game != prevGame) {
     var message;
     TimeLog.debug(user.name + " game: " + game + " | prevgame: " + prevGame);
 
-    if (checkUserRole(e.member.roles, "Master")) {
+    if (checkUserRole(e.member.roles, "Master") && notifyUpdates) {
       if (checkGame(game)) {
         message = user.startGame(game);
+        notifyUpdateChannel.sendMessage(message);
       } else if (checkGame(prevGame)) {
         message = user.endGame(prevGame);
-      }
-      if(notifyUpdates) {
-        notifyUpdateChannel.sendMessage(message);        
+        notifyUpdateChannel.sendMessage(message);
       }
       TimeLog.log(message)
     }
   }
 });
+
+// ------------------ GUILD MEMBER ADD/REMOVE ---------------------
 
 client.Dispatcher.on(Events.GUILD_MEMBER_ADD, e => {
   ServerUsers.add(e.member.username, new UserClass(
@@ -338,6 +333,8 @@ client.Dispatcher.on(Events.GUILD_MEMBER_REMOVE, e => {
   TimeLog.log("Removed user from server: " + e.member.username);
 });
 
+
+// ------------------ TYPING ---------------------
 var toggleAnnoyance = false;
 var userAnnoy = "Coffeefox";
 client.Dispatcher.on(Events.TYPING_START, e => {
@@ -350,7 +347,7 @@ client.Dispatcher.on(Events.TYPING_START, e => {
 
 // ---------------- FUNCTIONS ---------------------
 {
-  ignoredGames = ["", "Unity"];
+  ignoredGames = ["LyX", "Unity"];
 
   // Returns true if game is not in ignore and is not null, else returns false
   function checkGame(gameName) {
@@ -522,13 +519,13 @@ class UserClass {
 
   startGame(game) {
     this.gameTime.startTimer();
-    return this.name + " initialized " + game;
+    return Time.getTimeNowString() + this.name + " initialized " + game;
   }
 
   endGame(game) {
     this.gameTime.endTimer();
     var dur = Time.calculateTotalTime(this.gameTime.end, this.gameTime.start);
-    var msg = this.name + " quit " + game;
+    var msg = Time.getTimeNowString() + this.name + " quit " + game;
     if (this.gameTime.start > 0) {
       msg += " (" + dur + ")";
     }
@@ -599,6 +596,10 @@ class Time {
     return h + ":" + m + ":" + s;
   }
 
+  static getTimeNowString() {
+    return "(" + this.getTimeString(new Date()) + ") "
+  }
+
   static getDateString(d) {
     var h = (d.getHours() < 10 ? "0" : "") + d.getHours();
     var m = (d.getMinutes() < 10 ? "0" : "") + d.getMinutes();
@@ -650,19 +651,19 @@ class Time {
  */
 class TimeLog {
   static debug(text) {
-    var msg = "[DBG] (" + Time.getTimeString(new Date()) + ") " + text;
+    var msg = "[DBG] " + Time.getTimeNowString() + text;
     console.log(colors.yellow(msg));
     this.log_to_file(msg);
   }
 
   static log(text) {
-    var msg = "[LOG] (" + Time.getTimeString(new Date()) + ") " + text;
+    var msg = "[LOG] " + Time.getTimeNowString() + text;
     console.log(colors.green(msg));
     this.log_to_file(msg);
   }
 
   static error(text) {
-    var msg = "[ERR] (" + Time.getTimeString(new Date()) + ") " + text;
+    var msg = "[ERR] " + Time.getTimeNowString() + text;
     console.log(colors.red(msg));
     this.log_to_file(msg);
   }
