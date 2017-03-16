@@ -284,7 +284,7 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
         user.setOffline();
         statusMessage += " disconnected.";
       }
-      if(notifyUpdates && checkUserRole(e.member.roles, "Master")) {
+      if(notifyUpdates && checkUserRole(e.member.roles, "Master") && user.name != "ozz") {
         notifyUpdateChannel.sendMessage(statusMessage);        
       }
       TimeLog.log(statusMessage)
