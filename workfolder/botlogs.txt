@@ -1,0 +1,397 @@
+[LOG] (00:02:54) Connected as: ShitBot
+[LOG] (00:02:54) Adding all users on server
+[LOG] (00:02:54) Total users added: 15
+[LOG] (00:02:54) Online users added: 3
+[LOG] (00:02:54) Offline users added: 12
+[LOG] (00:05:35) Connected as: ShitBot
+[LOG] (00:05:35) Adding all users on server
+[LOG] (00:05:35) Total users added: 15
+[LOG] (00:05:35) Online users added: 3
+[LOG] (00:05:35) Offline users added: 12
+[LOG] (00:14:22) Connected as: ShitBot
+[LOG] (00:14:22) Adding all users on server
+[LOG] (00:14:22) Total users added: 15
+[LOG] (00:14:22) Online users added: 3
+[LOG] (00:14:22) Offline users added: 12
+[LOG] (00:14:48) Connected as: ShitBot
+[LOG] (00:14:48) Online users added: 3
+[LOG] (00:14:48) Adding all users on server
+[LOG] (00:14:48) Total users added: 15
+[LOG] (00:14:48) Offline users added: 12
+[DBG] (00:14:53) ozz game: LyX | prevgame: null
+[DBG] (00:15:03) ozz game: null | prevgame: LyX
+[LOG] (00:15:19) Connected as: ShitBot
+[LOG] (00:15:20) Adding all users on server
+[LOG] (00:15:20) Online users added: 3
+[LOG] (00:15:20) Offline users added: 12
+[LOG] (00:15:20) Total users added: 15
+[DBG] (00:15:28) ozz game: LyX | prevgame: null
+[DBG] (00:15:28) ozz initialized LyX
+[DBG] (00:15:38) ozz game: null | prevgame: LyX
+[DBG] (00:15:38) ozz quit LyX (9s)
+[LOG] (00:18:24) Connected as: ShitBot
+[LOG] (00:18:24) Adding all users on server
+[LOG] (00:18:24) Online users added: 3
+[LOG] (00:18:24) Total users added: 15
+[LOG] (00:18:24) Offline users added: 12
+[DBG] (00:18:35) User ozz sent message '.notify' in channel ozz
+[LOG] (00:18:35) Sent message: NotifyUpdates set to: true to: ozz
+[DBG] (00:18:35) User ShitBot sent message 'NotifyUpdates set to: true' in channel ozz
+[DBG] (00:18:41) User ozz sent message '.notify' in channel ozz
+[LOG] (00:18:41) Sent message: NotifyUpdates set to: false to: ozz
+[DBG] (00:18:41) User ShitBot sent message 'NotifyUpdates set to: false' in channel ozz
+[LOG] (00:22:16) Connected as: ShitBot
+[LOG] (00:22:16) Adding all users on server
+[LOG] (00:22:16) Offline users added: 12
+[LOG] (00:22:16) Online users added: 3
+[LOG] (00:22:16) Total users added: 15
+[DBG] (00:22:24) User ozz sent message '.cmds' in channel ozz
+[LOG] (00:22:24) Sent message: .
+.fu
+.stupid bot
+.shit
+.rust <item>
+.help
+.coffee
+.cc
+.notify
+.s <username>
+.reg <username>
+.uptime
+.reg <username>
+ to: ozz
+[DBG] (00:22:25) User ShitBot sent message '.
+.fu
+.stupid bot
+.shit
+.rust <item>
+.help
+.coffee
+.cc
+.notify
+.s <username>
+.reg <username>
+.uptime
+.reg <username>' in channel ozz
+[LOG] (00:24:19) Connected as: ShitBot
+[LOG] (00:24:19) Adding all users on server
+[LOG] (00:24:19) Offline users added: 12
+[LOG] (00:24:19) Online users added: 3
+[LOG] (00:24:19) Total users added: 15
+[LOG] (00:24:34) Connected as: ShitBot
+[LOG] (00:24:34) Offline users added: 12
+[LOG] (00:24:34) Adding all users on server
+[LOG] (00:24:34) Online users added: 3
+[LOG] (00:24:34) Total users added: 15
+[LOG] (00:35:31) Connected as: ShitBot
+[LOG] (00:35:31) Online users added: 3
+[LOG] (00:35:31) Adding all users on server
+[LOG] (00:35:31) Offline users added: 12
+[LOG] (00:35:31) Total users added: 15
+[LOG] (00:36:11) Connected as: ShitBot
+[LOG] (00:36:11) Adding all users on server
+[LOG] (00:36:11) Online users added: 3
+[LOG] (00:36:11) Total users added: 15
+[LOG] (00:36:11) Offline users added: 12
+[LOG] (00:37:23) Connected as: ShitBot
+[LOG] (00:37:24) Adding all users on server
+[LOG] (00:37:24) Online users added: 3
+[LOG] (00:37:24) Offline users added: 12
+[LOG] (00:37:24) Total users added: 15
+[LOG] (00:37:49) Connected as: ShitBot
+[LOG] (00:37:49) Offline users added: 12
+[LOG] (00:37:49) Adding all users on server
+[LOG] (00:37:49) Total users added: 15
+[LOG] (00:37:49) Online users added: 3
+[LOG] (00:38:55) Connected as: ShitBot
+[LOG] (00:38:55) Adding all users on server
+[LOG] (00:38:55) Online users added: 3
+[LOG] (00:38:55) Total users added: 15
+[LOG] (00:38:55) Offline users added: 12
+[LOG] (00:39:33) Connected as: ShitBot
+[LOG] (00:39:33) Adding all users on server
+[LOG] (00:39:33) Online users added: 3
+[LOG] (00:39:33) Total users added: 15
+[LOG] (00:39:33) Offline users added: 12
+[LOG] (00:39:52) Connected as: ShitBot
+[LOG] (00:39:52) Adding all users on server
+[LOG] (00:39:52) Online users added: 3
+[LOG] (00:39:52) Offline users added: 12
+[LOG] (00:39:52) Total users added: 15
+[LOG] (00:40:26) Connected as: ShitBot
+[LOG] (00:40:27) Adding all users on server
+[LOG] (00:40:27) Online users added: 3
+[LOG] (00:40:27) Offline users added: 12
+[LOG] (00:40:27) Total users added: 15
+[LOG] (00:40:37) Connected as: ShitBot
+[LOG] (00:40:37) Adding all users on server
+[LOG] (00:40:37) Online users added: 3
+[LOG] (00:40:37) Total users added: 15
+[LOG] (00:40:37) Offline users added: 12
+[LOG] (00:40:54) Connected as: ShitBot
+[LOG] (00:40:54) Adding all users on server
+[LOG] (00:40:54) Total users added: 15
+[LOG] (00:40:54) Online users added: 3
+[LOG] (00:40:54) Offline users added: 12
+[LOG] (00:41:45) Connected as: ShitBot
+[LOG] (00:41:45) Adding all users on server
+[LOG] (00:41:45) Online users added: 3
+[LOG] (00:41:45) Offline users added: 12
+[LOG] (00:41:45) Total users added: 15
+[DBG] (00:43:02) cruiserkernan game: Rocket League | prevgame: null
+[LOG] (00:43:02) cruiserkernan initialized Rocket League
+[LOG] (00:47:35) Connected as: ShitBot
+[LOG] (00:47:35) Adding all users on server
+[LOG] (00:47:35) Online users added: 3
+[LOG] (00:47:35) Offline users added: 12
+[LOG] (00:47:35) Total users added: 15
+[LOG] (00:50:38) Connected as: ShitBot
+[LOG] (00:50:38) Adding all users on server
+[LOG] (00:50:38) Online users added: 3
+[LOG] (00:50:38) Offline users added: 12
+[LOG] (00:50:38) Total users added: 15
+[LOG] (00:51:30) Connected as: ShitBot
+[LOG] (00:51:30) Adding all users on server
+[LOG] (00:51:30) Online users added: 3
+[LOG] (00:51:30) Offline users added: 12
+[LOG] (00:51:30) Total users added: 15
+[LOG] (00:52:00) Connected as: ShitBot
+[LOG] (00:52:00) Adding all users on server
+[LOG] (00:52:00) Online users added: 3
+[LOG] (00:52:00) Offline users added: 12
+[LOG] (00:52:00) Total users added: 15
+[LOG] (00:52:13) Connected as: ShitBot
+[LOG] (00:52:13) Adding all users on server
+[LOG] (00:52:13) Total users added: 15
+[LOG] (00:52:13) Offline users added: 12
+[LOG] (00:52:13) Online users added: 3
+[DBG] (00:52:13) User ShitBot sent message 'Hi' in channel ozz
+[LOG] (00:53:12) Connected as: ShitBot
+[LOG] (00:53:12) Adding all users on server
+[LOG] (00:53:12) Online users added: 3
+[LOG] (00:53:12) Offline users added: 12
+[LOG] (00:53:12) Total users added: 15
+[DBG] (00:53:12) User ShitBot sent message 'Hi' in channel ozz
+[LOG] (00:54:27) Connected as: ShitBot
+[LOG] (00:54:27) Adding all users on server
+[LOG] (00:54:27) Online users added: 3
+[LOG] (00:54:27) Offline users added: 12
+[LOG] (00:54:27) Total users added: 15
+[DBG] (00:54:27) User ShitBot sent message 'T_CONNECT Bot initialized' in channel ozz
+[LOG] (00:54:41) Connected as: ShitBot
+[LOG] (00:54:41) Adding all users on server
+[LOG] (00:54:41) Online users added: 3
+[LOG] (00:54:41) Total users added: 15
+[LOG] (00:54:41) Offline users added: 12
+[DBG] (00:54:41) User ShitBot sent message 'T_CONNECT Bot initialized' in channel ozz
+[DBG] (00:54:48) ozz game: LyX | prevgame: null
+[LOG] (00:54:48) ozz initialized LyX
+[DBG] (00:54:48) User ShitBot sent message 'ozz initialized LyX' in channel ozz
+[LOG] (01:04:02) Connected as: ShitBot
+[LOG] (01:04:02) Adding all users on server
+[LOG] (01:04:02) Online users added: 3
+[LOG] (01:04:02) Offline users added: 12
+[LOG] (01:04:02) Total users added: 15
+[DBG] (01:04:02) User ShitBot sent message 'T_CONNECT Bot initialized' in channel ozz
+[DBG] (01:04:18) User ozz sent message '.notify toggle' in channel ozz
+[LOG] (01:04:18) Sent message: NotifyUpdates set to: false to: ozz
+[DBG] (01:04:18) User ShitBot sent message 'NotifyUpdates set to: false' in channel ozz
+[DBG] (01:04:27) User ozz sent message '.notify ozz' in channel ozz
+[LOG] (01:04:27) Sent message: NotifyUpdateChannel set to:  to: ozz
+[DBG] (01:04:27) User ShitBot sent message 'NotifyUpdateChannel set to:' in channel ozz
+[LOG] (01:05:03) Connected as: ShitBot
+[LOG] (01:05:03) Adding all users on server
+[LOG] (01:05:03) Online users added: 3
+[LOG] (01:05:03) Offline users added: 12
+[LOG] (01:05:03) Total users added: 15
+[DBG] (01:05:04) User ShitBot sent message 'T_CONNECT Bot initialized' in channel ozz
+[DBG] (01:05:08) User ozz sent message '.notify ozz' in channel ozz
+[LOG] (01:05:08) Sent message: NotifyUpdateChannel set to: undefined to: ozz
+[DBG] (01:05:08) User ShitBot sent message 'NotifyUpdateChannel set to: undefined' in channel ozz
+[LOG] (01:05:32) Connected as: ShitBot
+[LOG] (01:05:32) Adding all users on server
+[LOG] (01:05:32) Online users added: 3
+[LOG] (01:05:32) Offline users added: 12
+[LOG] (01:05:32) Total users added: 15
+[DBG] (01:05:32) User ShitBot sent message 'T_CONNECT Bot initialized' in channel ozz
+[DBG] (01:05:39) User ozz sent message '.notify ozz' in channel ozz
+[LOG] (01:05:39) Sent message: NotifyUpdateChannel set to: undefined to: ozz
+[DBG] (01:05:39) User ShitBot sent message 'NotifyUpdateChannel set to: undefined' in channel ozz
+[LOG] (01:06:29) Connected as: ShitBot
+[LOG] (01:06:29) Adding all users on server
+[LOG] (01:06:29) Offline users added: 12
+[LOG] (01:06:29) Total users added: 15
+[LOG] (01:06:29) Online users added: 3
+[DBG] (01:06:29) User ShitBot sent message 'T_CONNECT Bot initialized' in channel ozz
+[DBG] (01:06:37) User ozz sent message '.notify show' in channel ozz
+[LOG] (01:06:37) Sent message: NotifyUpdates set to:  to: ozz
+[DBG] (01:06:37) User ShitBot sent message 'NotifyUpdates set to:' in channel ozz
+[LOG] (01:07:20) Connected as: ShitBot
+[LOG] (01:07:20) Adding all users on server
+[LOG] (01:07:20) Online users added: 3
+[LOG] (01:07:20) Offline users added: 12
+[LOG] (01:07:20) Total users added: 15
+[DBG] (01:07:21) User ShitBot sent message 'T_CONNECT Bot initialized' in channel ozz
+[LOG] (01:07:25) Sent message: NotifyUpdatesChannel: Should be a channel but is a string -> BAD to: ozz
+[DBG] (01:07:25) User ozz sent message '.notify show' in channel ozz
+[DBG] (01:07:25) User ShitBot sent message 'NotifyUpdatesChannel: Should be a channel but is a string -> BAD' in channel ozz
+[DBG] (01:07:29) User ozz sent message '.notify show' in channel ozz
+[LOG] (01:07:29) Sent message: NotifyUpdatesChannel: Should be a channel but is a string -> BAD to: ozz
+[DBG] (01:07:30) User ShitBot sent message 'NotifyUpdatesChannel: Should be a channel but is a string -> BAD' in channel ozz
+[LOG] (01:13:19) Connected as: ShitBot
+[LOG] (01:13:19) Adding all users on server
+[LOG] (01:13:19) Online users added: 3
+[LOG] (01:13:19) Offline users added: 12
+[LOG] (01:13:19) Total users added: 15
+[DBG] (01:13:19) User ShitBot sent message 'T_CONNECT Bot initialized' in channel ozz
+[LOG] (01:14:55) Connected as: ShitBot
+[LOG] (01:14:55) Adding all users on server
+[LOG] (01:14:55) Online users added: 3
+[LOG] (01:14:55) Offline users added: 12
+[LOG] (01:14:55) Total users added: 15
+[DBG] (01:14:55) User ShitBot sent message 'T_CONNECT Bot initialized' in channel ozz
+[LOG] (01:15:13) Connected as: ShitBot
+[LOG] (01:15:13) Adding all users on server
+[LOG] (01:15:13) Online users added: 3
+[LOG] (01:15:13) Offline users added: 12
+[LOG] (01:15:13) Total users added: 15
+[DBG] (01:15:13) User ShitBot sent message 'T_CONNECT Bot initialized' in channel ozz
+[LOG] (01:20:03) Connected as: ShitBot
+[LOG] (01:20:03) Online users added: 3
+[LOG] (01:20:03) Adding all users on server
+[LOG] (01:20:03) Total users added: 15
+[LOG] (01:20:03) Offline users added: 12
+[LOG] (01:21:12) Connected as: ShitBot
+[LOG] (01:21:12) Adding all users on server
+[LOG] (01:21:12) Online users added: 3
+[LOG] (01:21:12) Offline users added: 12
+[LOG] (01:21:12) Total users added: 15
+[LOG] (01:21:41) Connected as: ShitBot
+[LOG] (01:21:41) Adding all users on server
+[LOG] (01:21:41) Online users added: 3
+[LOG] (01:21:41) Offline users added: 12
+[LOG] (01:21:41) Total users added: 15
+[LOG] (01:29:49) Connected as: ShitBot
+[LOG] (01:29:49) Adding all users on server
+[LOG] (01:29:49) Online users added: 3
+[LOG] (01:29:49) Offline users added: 12
+[LOG] (01:29:49) Total users added: 15
+[LOG] (01:30:38) Connected as: ShitBot
+[LOG] (01:30:38) Adding all users on server
+[LOG] (01:30:38) Online users added: 3
+[LOG] (01:30:38) Offline users added: 12
+[LOG] (01:30:38) Total users added: 15
+[LOG] (01:31:10) Connected as: ShitBot
+[LOG] (01:31:10) Adding all users on server
+[LOG] (01:31:10) Online users added: 3
+[LOG] (01:31:10) Offline users added: 12
+[LOG] (01:31:10) Total users added: 15
+[LOG] (01:47:07) Connected as: ShitBot
+[LOG] (01:47:07) Adding all users on server
+[LOG] (01:47:07) Online users added: 3
+[LOG] (01:47:07) Offline users added: 12
+[LOG] (01:47:07) Total users added: 15
+[LOG] (01:48:34) Connected as: ShitBot
+[LOG] (01:48:34) Adding all users on server
+[LOG] (01:48:34) Online users added: 3
+[LOG] (01:48:34) Total users added: 15
+[LOG] (01:48:34) Offline users added: 12
+[DBG] (01:48:34) User ShitBot sent message 'TCONNECT_Bot Connected' in channel ozz
+[LOG] (01:49:08) Connected as: ShitBot
+[LOG] (01:49:08) Adding all users on server
+[LOG] (01:49:08) Offline users added: 12
+[LOG] (01:49:08) Total users added: 15
+[LOG] (01:49:08) Online users added: 3
+[DBG] (01:49:08) User ShitBot sent message 'TCONNECT_Bot Connected' in channel ozz
+[LOG] (01:50:42) Connected as: ShitBot
+[LOG] (01:50:42) Adding all users on server
+[LOG] (01:50:42) Offline users added: 12
+[LOG] (01:50:42) Online users added: 3
+[LOG] (01:50:42) Total users added: 15
+[DBG] (01:50:42) User ShitBot sent message 'TCONNECT_Bot Connected' in channel ozz
+[DBG] (01:50:48) ozz game: null | prevgame: LyX
+[LOG] (01:50:48) ozz quit LyX
+[DBG] (01:50:48) User ShitBot sent message 'ozz quit LyX' in channel ozz
+[DBG] (01:52:12) User ozz sent message '.notify ozz' in channel ozz
+[LOG] (01:52:12) Sent message: NotifyUpdateChannel set to: ozz to: ozz
+[DBG] (01:52:12) User ShitBot sent message 'NotifyUpdateChannel set to: ozz' in channel ozz
+[LOG] (01:53:38) Connected as: ShitBot
+[LOG] (01:53:38) Adding all users on server
+[LOG] (01:53:38) Offline users added: 12
+[LOG] (01:53:38) Online users added: 3
+[LOG] (01:53:38) Total users added: 15
+[DBG] (01:53:38) User ShitBot sent message 'TCONNECT_Bot Connected' in channel ozz
+[LOG] (02:09:38) Connected as: ShitBot
+[LOG] (02:09:38) Adding all users on server
+[LOG] (02:09:38) Online users added: 3
+[LOG] (02:09:38) Offline users added: 12
+[LOG] (02:09:38) Total users added: 15
+[DBG] (02:09:39) User ShitBot sent message 'TCONNECT_Bot Connected' in channel ozz
+[LOG] (02:10:10) Connected as: ShitBot
+[LOG] (02:10:10) Adding all users on server
+[LOG] (02:10:10) Online users added: 3
+[LOG] (02:10:10) Offline users added: 12
+[LOG] (02:10:10) Total users added: 15
+[DBG] (02:10:10) User ShitBot sent message 'TCONNECT_Bot Connected' in channel ozz
+[LOG] (02:10:30) Connected as: ShitBot
+[LOG] (02:10:30) Adding all users on server
+[LOG] (02:10:30) Online users added: 3
+[LOG] (02:10:30) Offline users added: 12
+[LOG] (02:10:30) Total users added: 15
+[DBG] (02:10:30) User ShitBot sent message 'TCONNECT_Bot Connected' in channel ozz
+[DBG] (02:10:42) User ozz sent message '.botnick t' in channel ozz
+[LOG] (02:10:42) Sent message: Botnick set to: Bot to: ozz
+[DBG] (02:10:42) User ShitBot sent message 'Botnick set to: Bot' in channel ozz
+[DBG] (02:10:51) User ozz sent message '.botnick Bot' in channel ozz
+[LOG] (02:10:51) Sent message: Botnick set to: t to: ozz
+[DBG] (02:10:51) User ShitBot sent message 'Botnick set to: t' in channel ozz
+[LOG] (02:15:53) Connected as: ShitBot
+[LOG] (02:15:53) Adding all users on server
+[LOG] (02:15:53) Online users added: 3
+[LOG] (02:15:53) Offline users added: 12
+[LOG] (02:15:53) Total users added: 15
+[DBG] (02:15:53) User ShitBot sent message 'TCONNECT_Bot Connected' in channel ozz
+[LOG] (00:52:15) Connected as: ShitBot
+[LOG] (00:52:15) Adding all users on server
+[LOG] (00:52:15) Online users added: 2
+[LOG] (00:52:15) Offline users added: 13
+[LOG] (00:52:15) Total users added: 15
+[DBG] (00:52:15) User ShitBot sent message '00:52:15 TCONNECT_Bot Connected' in channel ozz
+[LOG] (00:54:42) Connected as: ShitBot
+[LOG] (00:54:42) Adding all users on server
+[LOG] (00:54:42) Online users added: 2
+[LOG] (00:54:42) Offline users added: 13
+[LOG] (00:54:42) Total users added: 15
+[DBG] (00:54:42) User ShitBot sent message '(00:54:42) TCONNECT_Bot Connected' in channel ozz
+[LOG] (01:41:41) Connected as: ShitBot
+[LOG] (01:41:41) Adding all users on server
+[LOG] (01:41:41) Online users added: 2
+[LOG] (01:41:41) Offline users added: 13
+[LOG] (01:41:41) Total users added: 15
+[DBG] (01:41:41) User ShitBot sent message '(01:41:41) TCONNECT_Bot Connected' in channel ozz
+[LOG] (12:33:12) Connected as: ShitBot
+[LOG] (12:33:12) Adding all users on server
+[LOG] (12:33:12) Online users added: 3
+[LOG] (12:33:12) Offline users added: 12
+[LOG] (12:33:12) Total users added: 15
+[DBG] (12:33:12) User ShitBot sent message '(12:33:12) TCONNECT_Bot Connected' in channel ozz
+[LOG] (12:33:28) (12:33:28) vv disconnected.
+[LOG] (12:33:31) (12:33:31) vv connected.
+[LOG] (12:34:05) Connected as: ShitBot
+[LOG] (12:34:05) Adding all users on server
+[LOG] (12:34:05) Online users added: 3
+[LOG] (12:34:05) Offline users added: 12
+[LOG] (12:34:05) Total users added: 15
+[DBG] (12:34:06) User ShitBot sent message '(12:34:05) TCONNECT_Bot Connected' in channel ozz
+[DBG] (12:34:08) New user detected: ozz. Adding to serverUsers
+TypeError: Cannot read property 'name' of undefined
+[DBG] (12:34:12) New user detected: ozz. Adding to serverUsers
+TypeError: Cannot read property 'name' of undefined
+[LOG] (12:37:46) Connected as: ShitBot
+[LOG] (12:37:46) Adding all users on server
+[LOG] (12:37:46) Online users added: 3
+[LOG] (12:37:46) Offline users added: 12
+[LOG] (12:37:46) Total users added: 15
+[DBG] (12:37:47) User ShitBot sent message '(12:37:46) TCONNECT_Bot Connected' in channel ozz
+[LOG] (12:37:51) (12:37:51) ozz disconnected.
+[LOG] (12:37:53) (12:37:53) ozz connected.
