@@ -59,41 +59,41 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
   // Standard commands
   switch (content) {
     case ".fu": {
-      respondToUserCommand(e, fuckyou);
+      sendMessageToChannel(e, fuckyou);
     }
     break;
     case ".stupid bot": {
-      respondToUserCommand(
+      sendMessageToChannel(
         e,
         "Of course I'm stupid, you little bitch, if I was written by a stupid person."
       );
     }
     break;
     case ".help": {
-      respondToUserCommand(e, "Computer says no.");
+      sendMessageToChannel(e, "Computer says no.");
     }
     break;
     case ".cmds": {
-      respondToUserCommand(e, commands);
+      sendMessageToChannel(e, commands);
     }
     break;
     case ".coffee": {
-      respondToUserCommand(e, "Grinding coffee-beans...");
+      sendMessageToChannel(e, "Grinding coffee-beans...");
       setTimeout(
         function() {
-          respondToUserCommand(e, "Placing ground coffee in filter...");
+          sendMessageToChannel(e, "Placing ground coffee in filter...");
         },
         3000
       );
       setTimeout(
         function() {
-          respondToUserCommand(e, "Brewing coffee...");
+          sendMessageToChannel(e, "Brewing coffee...");
         },
         5000
       );
       setTimeout(
         function() {
-          respondToUserCommand(e, "Enjoy your shitty coffee. :poop: :coffee:");
+          sendMessageToChannel(e, "Enjoy your shitty coffee. :poop: :coffee:");
         },
         10000
       );
@@ -102,7 +102,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
     case ".uptime": {
       var startTimeBot = ServerUsers.timeCreated;
       var uptimeBot = Time.calculateTotalTime(new Date(), startTimeBot);
-      respondToUserCommand(
+      sendMessageToChannel(
         e,
         "Bot uptime: " +
           uptimeBot +
@@ -114,7 +114,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
     case ".cc": {
       var msg_ch = e.message.channel;
       var msgs = msg_ch.messages;
-      respondToUserCommand(e, "Channel created: " + msg_ch.createdAt);
+      sendMessageToChannel(e, "Channel created: " + msg_ch.createdAt);
     }
     break;
 
@@ -129,15 +129,15 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
       var link = "http://rust.wikia.com/wiki/";
       var search_item = getRestStr(content, " ");
       link += search_item;
-      respondToUserCommand(e, link);
+      sendMessageToChannel(e, link);
     }
     break;
     case ".s": {
       var usrname = getRestStr(content, " ");
       try {
-        respondToUserCommand(e, ServerUsers.get(usrname).getStatus());
+        sendMessageToChannel(e, ServerUsers.get(usrname).getStatus());
       } catch (err) {
-        respondToUserCommand(
+        sendMessageToChannel(
           e,
           "Username '" + usrname + "' does not exist"
         );
@@ -147,9 +147,9 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
     case ".reg": {
       var usrname = getRestStr(content, " ");
       try {
-        respondToUserCommand(e, ServerUsers.get(usrname).getRegistered());
+        sendMessageToChannel(e, ServerUsers.get(usrname).getRegistered());
       } catch (err) {
-        respondToUserCommand(
+        sendMessageToChannel(
           e,
           "Username '" + usrname + "' does not exist"
         );
@@ -161,14 +161,14 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
       if (subCmd == "toggle") {
         toggleAnnoyance = toggleAnnoyance ? false : true;
         TimeLog.log("Typing-annoyance toggled to: " + toggleAnnoyance);
-        respondToUserCommand(e, "Toggled to: " + toggleAnnoyance);
+        sendMessageToChannel(e, "Toggled to: " + toggleAnnoyance);
       } else {
         try {
           userAnnoy = ServerUsers.get(subCmd).name;
           TimeLog.log("Typing-annoyance listening for: " + userAnnoy + ".");
-          respondToUserCommand(e, "Annoy is set to: " + userAnnoy);
+          sendMessageToChannel(e, "Annoy is set to: " + userAnnoy);
         } catch (err) {
-          respondToUserCommand(
+          sendMessageToChannel(
             e,
             "Username '" + usrname + "' does not exist"
           );
@@ -183,14 +183,14 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
           ignoredGames.push(gamename);
           var msg = "Added " + gamename + " to ignoredGames: " + ignoredGames;
           TimeLog.log(msg);
-          respondToUserCommand(e, msg);
+          sendMessageToChannel(e, msg);
         } else {
           throw "Game is already ignored";
         }
       } catch (err) {
         err_msg = "Unable to add " + gamename + " to ignore: ";
         TimeLog.error(err_msg + err);
-        respondToUserCommand(e, err_msg + err);
+        sendMessageToChannel(e, err_msg + err);
       }
     }
     break;
@@ -204,7 +204,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
           msg = setDeleteTimer(time, time_type);
           var msg = "MessageDeleteTimer is now set to " + msg_del_timer + "ms from " + time_str;
           TimeLog.log(msg);
-          respondToUserCommand(e, msg);
+          sendMessageToChannel(e, msg);
         }
         else {
           throw "Unspecified time";          
@@ -212,7 +212,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
       } catch (err) {
         err_msg = "Unable to set timer - ";
         TimeLog.error(err_msg + err);
-        respondToUserCommand(e, err_msg + err);
+        sendMessageToChannel(e, err_msg + err);
       }
     }
     break;
@@ -221,10 +221,10 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
       try {
         if(option == "toggle") {
           notifyUpdates = notifyUpdates ? false : true
-          respondToUserCommand(e, "NotifyUpdates set to: " + notifyUpdates);         
+          sendMessageToChannel(e, "NotifyUpdates set to: " + notifyUpdates);         
         }
         else if(option == "show") {
-          respondToUserCommand(e, "NotifyUpdatesChannel: " + notifyUpdateChannel);
+          sendMessageToChannel(e, "NotifyUpdatesChannel: " + notifyUpdateChannel);
         }
         else {
           if(option == "ozz") {
@@ -234,11 +234,11 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
           else {
             notifyUpdateChannel = getServerChannel(option)
           }
-          respondToUserCommand(e, "NotifyUpdateChannel set to: " + notifyUpdateChannel.name);          
+          sendMessageToChannel(e, "NotifyUpdateChannel set to: " + notifyUpdateChannel.name);          
         }
       } catch (err) {
         TimeLog.error(err);
-        respondToUserCommand(e, err);
+        sendMessageToChannel(e, err);
       }
     }
     break;
@@ -246,11 +246,11 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
       var nickname = getRestStr(content, " ");
       var bot = getUser("ShitBot")
       bot.setNickname(nickname).then(()=> {
-        respondToUserCommand(e, "Botnick set to: " + nickname);
+        sendMessageToChannel(e, "Botnick set to: " + nickname);
         TimeLog.log("Botnick set to: " + nickname)
       }, ()=> {
         err_msg = "Failed to set BotNick"
-        respondToUserCommand(e, err_msg);
+        sendMessageToChannel(e, err_msg);
         TimeLog.error(err_msg)
       })
     }
@@ -275,17 +275,21 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
   notifyUpdateChannel = dm_ch  
 
   try {
-    if (status != prevStatus) {
+    // controversial way of checking that status and prevstatus are only "online" or "offline"
+    if (status != prevStatus 
+        && (status == "online" || status == "offline") 
+        && (prevStatus == "online" || prevStatus == "offline")
+    ) {
       var statusMessage = Time.getTimeNowString() + user.name;
       if (status == "online" && prevStatus == "offline") {
         user.setOnline();
-        statusMessage += " connected.";
+        statusMessage += " connected";
       } else if (status == "offline" && prevStatus == "online") {
         user.setOffline();
-        statusMessage += " disconnected.";
+        statusMessage += " disconnected";
       }
       if(notifyUpdates && checkUserRole(e.member.roles, "Master") && user.name != "ozz") {
-        notifyUpdateChannel.sendMessage(statusMessage);        
+        notifyUpdateChannel.sendMessage(statusMessage);
       }
       TimeLog.log(statusMessage)
     }
@@ -369,7 +373,7 @@ client.Dispatcher.on(Events.TYPING_START, e => {
     return false;
   }
 
-  function respondToUserCommand(event, msg) {
+  function sendMessageToChannel(event, msg) {
     var channel = event.message.channel;
     TimeLog.log("Sent message: " + msg + " to: " + channel.name);
     channel.sendMessage(msg);
