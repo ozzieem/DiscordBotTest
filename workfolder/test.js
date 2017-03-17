@@ -276,7 +276,7 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
 
   try {
     if (status != prevStatus) {
-      var statusMessage = TimeLog.getTimeNowString() + user.name;
+      var statusMessage = Time.getTimeNowString() + user.name;
       if (status == "online" && prevStatus == "offline") {
         user.setOnline();
         statusMessage += " connected.";
@@ -289,12 +289,17 @@ client.Dispatcher.on(Events.PRESENCE_UPDATE, e => {
       }
       TimeLog.log(statusMessage)
     }
-  } catch (err) {
-    TimeLog.debug(
-      "New user detected: " + e.user.username + ". Adding to serverUsers\n"
-    );
-    ServerUsers.add(e.user.username, e.user.status, e.user.registeredAt);
-  }
+  } catch (e) {
+    if(e instanceof TypeError) {
+        TimeLog.error(
+          "New user detected: " + e.user.username + ". Adding to serverUsers\n" + err
+        );
+        ServerUsers.add(e.user.username, e.user.status, e.user.registeredAt);
+      }
+      else {
+        TimeLog.error("Error detected in statusupdate - " + e);
+    } 
+  } 
 
   var game = e.user.gameName;
   var prevGame = e.user.previousGameName;
