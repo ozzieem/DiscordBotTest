@@ -395,3 +395,38 @@ TypeError: Cannot read property 'name' of undefined
 [DBG] (12:37:47) User ShitBot sent message '(12:37:46) TCONNECT_Bot Connected' in channel ozz
 [LOG] (12:37:51) (12:37:51) ozz disconnected.
 [LOG] (12:37:53) (12:37:53) ozz connected.
+[LOG] (13:04:53) Connected as: ShitBot
+[LOG] (13:04:53) Adding all users on server
+[LOG] (13:04:53) Online users added: 4
+[LOG] (13:04:53) Offline users added: 11
+[LOG] (13:04:53) Total users added: 15
+[DBG] (13:04:54) User ShitBot sent message '(13:04:53) TCONNECT_Bot Connected' in channel ozz
+[LOG] (13:04:57) (13:04:57) ozz disconnected.
+[DBG] (13:04:58) User ShitBot sent message '(13:04:57) ozz disconnected.' in channel ozz
+[LOG] (13:05:03) (13:05:03) ozz connected.
+[DBG] (13:05:03) User ShitBot sent message '(13:05:03) ozz connected.' in channel ozz
+[LOG] (13:05:36) (13:05:36) Tavbe
+[DBG] (13:05:36) User ShitBot sent message '(13:05:36) Tavbe' in channel ozz
+[DBG] (13:05:36) User ShitBot sent message '(13:05:35) Tavbe' in channel ozz
+[LOG] (13:08:20) Connected as: ShitBot
+[LOG] (13:08:20) Adding all users on server
+[LOG] (13:08:20) Online users added: 4
+[LOG] (13:08:20) Offline users added: 11
+[LOG] (13:08:20) Total users added: 15
+[DBG] (13:08:20) User ShitBot sent message '(13:08:20) TCONNECT_Bot Connected' in channel ozz
+[LOG] (13:10:00) (13:10:00) ozz disconnected
+[DBG] (13:10:01) User ShitBot sent message '(13:10:00) ozz disconnected' in channel ozz
+[LOG] (13:10:03) (13:10:03) ozz connected
+[DBG] (13:10:03) User ShitBot sent message '(13:10:03) ozz connected' in channel ozz
+[LOG] (13:18:33) (13:18:33) Tavbe disconnected
+[DBG] (13:18:33) Tavbe game: null | prevgame: Unity
+[DBG] (13:18:33) Unity is ignored. Not sending out message about it
+[LOG] (13:18:33) undefined
+[DBG] (13:18:33) User ShitBot sent message '(13:18:32) Tavbe disconnected.' in channel ozz
+[DBG] (13:18:33) User ShitBot sent message '(13:18:33) Tavbe disconnected' in channel ozz
+[LOG] (13:20:49) (13:20:49) Tavbe connected
+[DBG] (13:20:49) Tavbe game: Unity | prevgame: null
+[DBG] (13:20:49) Unity is ignored. Not sending out message about it
+[LOG] (13:20:49) undefined
+[DBG] (13:20:49) User ShitBot sent message '(13:20:49) Tavbe connected' in channel ozz
+[DBG] (13:20:49) User ShitBot sent message '(13:20:48) Tavbe connected.' in channel ozz
