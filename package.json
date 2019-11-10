@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "test.js",
-  "dependencies": {},
+  "dependencies": {
+    "discordie": "latest",
+    "colors": "latest"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "test.js"
